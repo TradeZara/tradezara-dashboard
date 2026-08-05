@@ -354,34 +354,34 @@
   <div class="nav-logo">TRADE<span>ZARA</span></div>
   <div class="nav-tag">internal</div>
   <div class="nav-tag">v2.0</div>
-  <div class="nav-live">LIVE DASHBOARD · SYNCED JUST NOW</div>
+  <div class="nav-live">LIVE DASHBOARD · SYNCED {{SYNC_AGO}}</div>
 </nav>
 
 <div class="hero">
   <div class="hero-title">// DEVELOPER COMMAND CENTER<span class="cursor">_</span></div>
   <div class="hero-sub">CONTRIBUTOR INTELLIGENCE &amp; CODEBASE ANALYTICS</div>
-  <div class="hero-ts">LAST SYNC: <span>2026-08-05 23:46:53 UTC</span></div>
+  <div class="hero-ts">LAST SYNC: <span>{{SYNC_AT}}</span></div>
 </div>
 
 <div class="metrics">
   <div class="metric">
     <div class="metric-label">Total Commits</div>
-    <div class="metric-value">2309</div>
+    <div class="metric-value">{{TOTAL_COMMITS}}</div>
     <div class="metric-sub">across all repositories</div>
   </div>
   <div class="metric">
     <div class="metric-label">PRs Merged</div>
-    <div class="metric-value">—</div>
+    <div class="metric-value">{{TOTAL_PRS}}</div>
     <div class="metric-sub">reviewed &amp; shipped</div>
   </div>
   <div class="metric">
     <div class="metric-label">Contributors</div>
-    <div class="metric-value">19</div>
+    <div class="metric-value">{{TOTAL_CONTRIBUTORS}}</div>
     <div class="metric-sub">active developers</div>
   </div>
   <div class="metric">
     <div class="metric-label">Repositories</div>
-    <div class="metric-value">10</div>
+    <div class="metric-value">{{TOTAL_REPOS}}</div>
     <div class="metric-sub">active codebases</div>
   </div>
 </div>
@@ -941,7 +941,7 @@
 
 <footer>
   <div>TRADEZARA // DEVELOPER DASHBOARD <span>v2.0</span></div>
-  <div>generated <span>2026-08-05</span> · powered by GitHub API</div>
+  <div>generated <span>{{SYNC_DATE}}</span> · powered by GitHub API</div>
 </footer>
 
 <script>
