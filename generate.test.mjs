@@ -15,8 +15,8 @@ const person = (login, total, weeks = [{ w: weekAgo(1), c: total }]) => ({
 const merged = login => ({ user: { login }, merged_at: '2026-07-01T00:00:00Z' })
 const abandoned = login => ({ user: { login }, merged_at: null })
 
-/** Por padrão todo mundo do fixture é membro da org; os testes de filtro passam
- *  a lista de membros explicitamente. */
+/** By default everyone in the fixture is an org member; the filtering tests
+ *  pass the member list explicitly. */
 const build = (repos, syncedAt = SYNCED, members) =>
   buildModel(repos, syncedAt, new Set(members ?? everyone(repos)))
 
@@ -25,9 +25,9 @@ const everyone = repos =>
     .flatMap(r => [...r.contributors.map(c => c.author?.login), ...(r.pulls ?? []).map(p => p.user.login)])
     .filter(Boolean)
 
-// ---------- agregação de commits ----------
+// ---------- commit aggregation ----------
 
-test('soma commits do mesmo login entre repositórios', () => {
+test('sums commits for the same login across repositories', () => {
   const model = build([
     { name: 'pip-matrix', contributors: [person('ArtBreguez', 581), person('claude', 200)] },
     { name: 'databento-server', contributors: [person('ArtBreguez', 20)] },
@@ -40,24 +40,24 @@ test('soma commits do mesmo login entre repositórios', () => {
   assert.deepEqual(model.contributors[0].repos, ['pip-matrix', 'databento-server'])
 })
 
-test('só entra no painel quem é membro da organização', () => {
+test('only org members reach the dashboard', () => {
   const model = build(
     [{
       name: 'pip-matrix',
-      contributors: [person('claude', 900), person('Antonio-Ramon', 581), person('externo', 300)],
-      pulls: [merged('claude'), merged('externo'), merged('Antonio-Ramon')],
+      contributors: [person('claude', 900), person('Antonio-Ramon', 581), person('outsider', 300)],
+      pulls: [merged('claude'), merged('outsider'), merged('Antonio-Ramon')],
     }],
     SYNCED,
     ['Antonio-Ramon'],
   )
 
   assert.deepEqual(model.contributors.map(c => c.login), ['Antonio-Ramon'])
-  assert.equal(model.totals.commits, 581, 'commits de fora da org não entram no total')
+  assert.equal(model.totals.commits, 581, 'commits from outside the org stay out of the total')
   assert.equal(model.totals.prs, 1)
-  assert.equal(model.repos[0].commits, 581, 'o total do repositório também respeita o filtro')
+  assert.equal(model.repos[0].commits, 581, 'the per-repository total honours the filter too')
 })
 
-test('autor sem conta vinculada não entra — não há como saber se é da org', () => {
+test('an unlinked commit author stays out — there is no way to tell if they are in the org', () => {
   const model = build(
     [{ name: 'pip-matrix', contributors: [person('Antonio-Ramon', 10), person(null, 7)] }],
     SYNCED,
@@ -68,7 +68,7 @@ test('autor sem conta vinculada não entra — não há como saber se é da org'
   assert.equal(model.totals.contributors, 1)
 })
 
-test('o número do topo bate com a soma das linhas do leaderboard', () => {
+test('the headline number matches the sum of the leaderboard rows', () => {
   const model = build([
     { name: 'a', contributors: [person('x', 300), person('y', 45)], pulls: [merged('x'), merged('y')] },
     { name: 'b', contributors: [person('z', 1)], pulls: [merged('z')] },
@@ -79,14 +79,14 @@ test('o número do topo bate com a soma das linhas do leaderboard', () => {
   assert.equal(model.repos.reduce((t, r) => t + r.commits, 0), model.totals.commits)
 })
 
-test('nenhum teto de paginação: o total do contribuidor é o que a API reporta', () => {
+test('no pagination ceiling: a contributor total is whatever the API reports', () => {
   const model = build([{ name: 'pip-matrix', contributors: [person('Antonio-Ramon', 581)] }], SYNCED)
   assert.equal(model.totals.commits, 581)
 })
 
 // ---------- PRs ----------
 
-test('conta PRs mergeados por autor e ignora os fechados sem merge', () => {
+test('counts merged PRs per author and ignores those closed without a merge', () => {
   const model = build([{
     name: 'pip-matrix',
     contributors: [person('x', 5), person('y', 5)],
@@ -98,9 +98,9 @@ test('conta PRs mergeados por autor e ignora os fechados sem merge', () => {
   assert.equal(model.totals.prs, 2)
 })
 
-// ---------- datas e séries semanais ----------
+// ---------- dates and weekly series ----------
 
-test('primeira e última atividade vêm das semanas com contagem diferente de zero', () => {
+test('first and last activity come from the weeks with a non-zero count', () => {
   const model = build([{
     name: 'a',
     contributors: [person('x', 9, [
@@ -116,65 +116,65 @@ test('primeira e última atividade vêm das semanas com contagem diferente de ze
   assert.equal(x.last, new Date(weekAgo(2) * 1000).toISOString().slice(0, 10))
 })
 
-test('as semanas do gráfico são datas de calendário, não W1..W12', () => {
+test('chart weeks are calendar dates, not W1..W12', () => {
   const model = build([{ name: 'a', contributors: [person('x', 3)] }], SYNCED)
   assert.equal(model.weeks.length, 12)
   assert.match(new Date(model.weeks[0] * 1000).toISOString().slice(0, 10), /^\d{4}-\d{2}-\d{2}$/)
   assert.ok(model.weeks.every((w, i) => i === 0 || w - model.weeks[i - 1] === WEEK))
 })
 
-test('as semanas ancoram no que a API reportou, não no relógio da execução', () => {
-  // A API alinha as semanas no domingo; a época do Unix cai numa quinta.
-  // Ancorar no relógio desalinha as chaves e zera todas as séries.
-  const domingo = Math.floor(Date.parse('2026-08-02T00:00:00Z') / 1000)
+test('weeks anchor on what the API reported, not on the run clock', () => {
+  // The API aligns weeks to Sunday; the Unix epoch falls on a Thursday.
+  // Anchoring on the clock misaligns the keys and zeroes every series.
+  const sunday = Math.floor(Date.parse('2026-08-02T00:00:00Z') / 1000)
   const model = build(
-    [{ name: 'a', contributors: [person('x', 7, [{ w: domingo, c: 7 }])] }],
-    new Date('2026-08-06T09:00:00Z'), // quinta, o dia em que o bug aparecia
+    [{ name: 'a', contributors: [person('x', 7, [{ w: sunday, c: 7 }])] }],
+    new Date('2026-08-06T09:00:00Z'), // Thursday, the day the bug showed up
   )
 
-  assert.ok(model.weeks.includes(domingo), 'a semana da API tem que estar no eixo do gráfico')
+  assert.ok(model.weeks.includes(sunday), 'the API week must be on the chart axis')
   const html = render('{{ACTIVITY_DATASETS}}', model)
-  assert.equal(JSON.parse(html)[0].data.reduce((a, b) => a + b, 0), 7, 'série não pode sair zerada')
+  assert.equal(JSON.parse(html)[0].data.reduce((a, b) => a + b, 0), 7, 'the series must not come out zeroed')
 })
 
-// ---------- repositórios ----------
+// ---------- repositories ----------
 
-test('repositórios saem ordenados por commits, com contagem de contribuidores', () => {
+test('repositories come out sorted by commits, with a contributor count', () => {
   const model = build([
-    { name: 'pequeno', contributors: [person('x', 1)] },
-    { name: 'grande', contributors: [person('y', 300), person('z', 20)] },
+    { name: 'small', contributors: [person('x', 1)] },
+    { name: 'large', contributors: [person('y', 300), person('z', 20)] },
   ], SYNCED)
 
-  assert.deepEqual(model.repos.map(r => r.name), ['grande', 'pequeno'])
+  assert.deepEqual(model.repos.map(r => r.name), ['large', 'small'])
   assert.equal(model.repos[0].contributors, 2)
   assert.equal(model.totals.repos, 2)
 })
 
 // ---------- radar ----------
 
-test('radar normaliza contra o topo da organização e decai com o tempo', () => {
+test('the radar normalises against the org leader and decays over time', () => {
   const model = build([{
     name: 'a',
     contributors: [
-      person('lider', 100, [{ w: weekAgo(1), c: 100 }]),
-      person('antigo', 50, [{ w: weekAgo(60), c: 50 }]),
+      person('leader', 100, [{ w: weekAgo(1), c: 100 }]),
+      person('stale', 50, [{ w: weekAgo(60), c: 50 }]),
     ],
-    pulls: [merged('lider'), merged('lider'), merged('antigo')],
+    pulls: [merged('leader'), merged('leader'), merged('stale')],
   }], SYNCED)
 
-  const [lider, antigo] = model.contributors
-  assert.deepEqual(radarAxes(lider, model), [100, 100, 100, radarAxes(lider, model)[3]])
-  assert.equal(radarAxes(antigo, model)[0], 50)
-  assert.equal(radarAxes(antigo, model)[1], 50)
-  assert.ok(radarAxes(antigo, model)[3] < radarAxes(lider, model)[3], 'quem parou há mais tempo tem recência menor')
-  assert.ok(radarAxes(antigo, model)[3] >= 0)
+  const [leader, stale] = model.contributors
+  assert.deepEqual(radarAxes(leader, model), [100, 100, 100, radarAxes(leader, model)[3]])
+  assert.equal(radarAxes(stale, model)[0], 50)
+  assert.equal(radarAxes(stale, model)[1], 50)
+  assert.ok(radarAxes(stale, model)[3] < radarAxes(leader, model)[3], 'whoever stopped longer ago scores lower on recency')
+  assert.ok(radarAxes(stale, model)[3] >= 0)
 })
 
 // ---------- 202 ----------
 
-test('202 é "ainda calculando", não "repositório sem contribuidores"', () => {
+test('202 means "still computing", not "repository with no contributors"', () => {
   assert.equal(isStillComputing(202, []), true)
-  assert.equal(isStillComputing(200, []), true, 'cache frio devolve 200 + [] — precisa de retry')
+  assert.equal(isStillComputing(200, []), true, 'a cold cache returns 200 + [] — it needs a retry')
   assert.equal(isStillComputing(200, [person('x', 1)]), false)
 })
 
@@ -185,12 +185,12 @@ const fullModel = () => build([
   { name: 'databento-server', contributors: [person('claude', 42)], pulls: [abandoned('ArtBreguez')] },
 ], SYNCED, ['ArtBreguez', 'Antonio-Ramon'])
 
-test('o template real não sai com placeholder por preencher', async () => {
+test('the real template comes out with no placeholder left behind', async () => {
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
   assert.doesNotMatch(render(template, fullModel()), /\{\{/)
 })
 
-test('o JSON entregue aos gráficos é válido e carrega as séries reais', () => {
+test('the JSON handed to the charts is valid and carries the real series', () => {
   const model = fullModel()
   const datasets = JSON.parse(render('{{ACTIVITY_DATASETS}}', model))
 
@@ -199,20 +199,20 @@ test('o JSON entregue aos gráficos é válido e carrega as séries reais', () =
   assert.equal(datasets[0].data.reduce((a, b) => a + b, 0), 581)
 })
 
-test('repoData entrega contributors como contagem, que é o que o card mostra', () => {
+test('repoData hands contributors over as a count, which is what the card shows', () => {
   const repoData = JSON.parse(render('{{REPO_DATA}}', fullModel()))
   assert.deepEqual(repoData['pip-matrix'], { commits: 585, contributors: 2 })
-  assert.deepEqual(repoData['databento-server'], { commits: 0, contributors: 0 }, 'repo só com bot zera')
+  assert.deepEqual(repoData['databento-server'], { commits: 0, contributors: 0 }, 'a repo with only bots comes out at zero')
   assert.equal(typeof repoData['pip-matrix'].contributors, 'number')
 })
 
-test('login é escapado antes de entrar no HTML', () => {
+test('a login is escaped before it reaches the HTML', () => {
   const model = build([{ name: 'a', contributors: [person('<script>x</script>', 1)] }], SYNCED)
   const html = render('{{LEADERBOARD_ROWS}}', model)
   assert.doesNotMatch(html, /<script>/)
   assert.match(html, /&lt;script&gt;/)
 })
 
-test('placeholder desconhecido explode em vez de vazar para a página', () => {
+test('an unknown placeholder throws instead of leaking to the page', () => {
   assert.throws(() => render('{{TOTAL_STARS}}', build([], SYNCED)), /TOTAL_STARS/)
 })
