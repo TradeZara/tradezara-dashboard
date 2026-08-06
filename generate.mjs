@@ -1,24 +1,27 @@
-// Gera index.html a partir da API do GitHub. Fonte da verdade do dashboard.
-// Uso: GITHUB_TOKEN=<token de leitura da org> node generate.mjs
+// Generates index.html from the GitHub API. Source of truth for the dashboard.
+// Usage: GITHUB_TOKEN=<org read token> node generate.mjs
 import { readFile, writeFile } from 'node:fs/promises'
 
 const ORG = 'TradeZara'
 const API = 'https://api.github.com'
-const STATS_RETRIES = 6
-const STATS_WAIT_MS = 5000
+// A repo that just received a push recomputes its stats; short waits turn that
+// into a red build on every run right after a merge.
+const STATS_RETRIES = 12
+const STATS_WAIT_MS = 10000
 const WEEKS = 12
 const TOP = 5
 const COLORS = ['#00ff41', '#ff0055', '#00d4ff', '#ffbb00', '#bf00ff']
 const RANK_ICONS = ['👑', '⚡', '🔥', '💎', '🚀']
 const SPARK_MIN = 3
 const SPARK_MAX = 30
-const RECENCY_ZERO_DAYS = 365 // atividade mais velha que isso zera o eixo de recência do radar
+const RECENCY_ZERO_DAYS = 365 // activity older than this zeroes the radar's recency axis
 const DAY = 86400
 
-// ---------- transformação pura (a costura testada) ----------
+// ---------- pure transform (the tested seam) ----------
 
-/** Resposta de /stats/contributors: 202 = ainda calculando, 200 + [] = pode ser
- *  cache frio ou repo sem contribuidores. Confundir os dois publica painel zerado. */
+/** /stats/contributors reply: 202 = still computing, 200 + [] = either a cold
+ *  cache or a repo with no contributors. Conflating the two publishes an empty
+ *  dashboard. */
 export function isStillComputing(status, contributors) {
   return status === 202 || (status === 200 && contributors.length === 0)
 }
@@ -26,8 +29,8 @@ export function isStillComputing(status, contributors) {
 const iso = epochSeconds => new Date(epochSeconds * 1000).toISOString().slice(0, 10)
 
 /** repos: [{ name, contributors: [{ author, total, weeks }], pulls: [{ user, merged_at }] }]
- *  members: Set de logins da organização. Só eles entram no painel — bots,
- *  contribuidores externos e autores sem conta vinculada ficam de fora. */
+ *  members: Set of org member logins. Only they reach the dashboard — bots,
+ *  outside contributors and unlinked commit authors are left out. */
 export function buildModel(repos, syncedAt, members) {
   repos = repos.map(r => ({
     ...r,
@@ -53,7 +56,7 @@ export function buildModel(repos, syncedAt, members) {
         if (count > 0) p.weeks.set(w, (p.weeks.get(w) ?? 0) + count)
       }
     }
-    // PRs fechados sem merge não contam
+    // PRs closed without a merge do not count
     for (const pr of repo.pulls) {
       if (pr.merged_at) person(pr.user.login).prs++
     }
@@ -88,9 +91,9 @@ export function buildModel(repos, syncedAt, members) {
   }
 }
 
-/** As últimas WEEKS semanas que a API reportou. Ancorar no relógio local
- *  desalinharia as chaves (a época do Unix cai numa quinta, as semanas da API
- *  começam no domingo) e zeraria todas as séries. */
+/** The last WEEKS weeks the API reported. Anchoring on the local clock would
+ *  misalign the keys (the Unix epoch falls on a Thursday, API weeks start on
+ *  Sunday) and zero out every series. */
 function recentWeeks(contributors) {
   const all = new Set()
   for (const c of contributors) for (const w of c.weeks.keys()) all.add(w)
@@ -101,7 +104,7 @@ function recentWeeks(contributors) {
 
 const series = (person, weeks) => weeks.map(w => person.weeks.get(w) ?? 0)
 
-/** Radar: quatro eixos normalizados contra o topo da organização. */
+/** Radar: four axes normalised against the org-wide leader. */
 export function radarAxes(contributor, model) {
   const max = key => Math.max(1, ...model.contributors.map(c => c[key]))
   const pct = (value, ceiling) => Math.round((value / ceiling) * 100)
@@ -116,7 +119,7 @@ export function radarAxes(contributor, model) {
   ]
 }
 
-// ---------- renderização ----------
+// ---------- rendering ----------
 
 const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch])
 
@@ -194,7 +197,7 @@ export function render(template, model) {
   const values = {
     SYNC_AT: t.toISOString().slice(0, 19).replace('T', ' ') + ' UTC',
     SYNC_DATE: t.toISOString().slice(0, 10),
-    SYNC_ISO: t.toISOString(), // o "há quanto tempo" é calculado no browser
+    SYNC_ISO: t.toISOString(), // the "how long ago" is computed in the browser
     TOTAL_COMMITS: model.totals.commits,
     TOTAL_PRS: model.totals.prs,
     TOTAL_CONTRIBUTORS: model.totals.contributors,
@@ -229,7 +232,7 @@ export function render(template, model) {
     ),
   }
   return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-    if (!(key in values)) throw new Error(`placeholder desconhecido no template: ${match}`)
+    if (!(key in values)) throw new Error(`unknown placeholder in template: ${match}`)
     return String(values[key])
   })
 }
@@ -247,8 +250,8 @@ async function api(token, path) {
     limit: res.headers.get('x-ratelimit-limit'),
   }
   if (res.status === 401 || res.status === 403) {
-    const cause = rateLimit.remaining === '0' ? 'rate limit esgotado' : 'credencial recusada'
-    throw new Error(`${cause} (${res.status}) em ${path}`)
+    const cause = rateLimit.remaining === '0' ? 'rate limit exhausted' : 'credentials rejected'
+    throw new Error(`${cause} (${res.status}) on ${path}`)
   }
   if (!res.ok && res.status !== 202) throw new Error(`GET ${path} → ${res.status}`)
   const body = await res.text()
@@ -270,8 +273,8 @@ async function fetchContributors(token, repo) {
     const contributors = Array.isArray(json) ? json : []
     if (!isStillComputing(status, contributors)) return contributors
     if (attempt > STATS_RETRIES) {
-      if (status === 202) throw new Error(`${repo}: estatísticas ainda calculando após ${STATS_RETRIES} tentativas`)
-      return [] // 200 + [] estável: repo realmente sem contribuidores
+      if (status === 202) throw new Error(`${repo}: stats still computing after ${STATS_RETRIES} retries`)
+      return [] // stable 200 + []: the repo genuinely has no contributors
     }
     await new Promise(r => setTimeout(r, STATS_WAIT_MS))
   }
@@ -279,12 +282,12 @@ async function fetchContributors(token, repo) {
 
 async function main() {
   const token = process.env.GITHUB_TOKEN
-  if (!token) throw new Error('GITHUB_TOKEN ausente — o gerador não roda sem token de leitura da org')
+  if (!token) throw new Error('GITHUB_TOKEN missing — the generator needs an org read token')
 
-  // Um token sem visibilidade da organização devolve poucos membros ou nenhum,
-  // e o filtro apagaria o painel inteiro. Melhor falhar que publicar vazio.
+  // A token without org visibility returns few members or none at all, and the
+  // filter would wipe the whole dashboard. Better to fail than publish empty.
   const members = new Set((await paginate(token, `/orgs/${ORG}/members?`)).map(m => m.login))
-  if (members.size === 0) throw new Error('nenhum membro da organização visível — token sem read:org?')
+  if (members.size === 0) throw new Error('no org members visible — is the token missing read:org?')
 
   const names = (await paginate(token, `/orgs/${ORG}/repos?type=all`)).filter(r => !r.archived).map(r => r.name)
   const repos = []
@@ -300,14 +303,14 @@ async function main() {
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
   await writeFile(new URL('./index.html', import.meta.url), render(template, model))
 
-  console.log(`${repos.length} repos, ${model.totals.commits} commits, ${model.totals.prs} PRs, ${model.totals.contributors} contribuidores`)
-  console.log(`rate limit: ${rateLimit.remaining}/${rateLimit.limit} restantes`)
+  console.log(`${repos.length} repos, ${model.totals.commits} commits, ${model.totals.prs} PRs, ${model.totals.contributors} contributors`)
+  console.log(`rate limit: ${rateLimit.remaining}/${rateLimit.limit} remaining`)
 }
 
 if (process.argv[1]?.endsWith('generate.mjs')) {
   main().catch(err => {
-    // falha atômica: nada foi escrito, o index.html publicado continua o de antes
-    console.error(`ABORTADO sem escrever index.html — ${err.message}`)
+    // atomic failure: nothing was written, the published index.html stands
+    console.error(`ABORTED without writing index.html — ${err.message}`)
     process.exit(1)
   })
 }

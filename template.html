@@ -183,8 +183,8 @@
     margin-bottom: 14px;
   }
   .chart-title span { color: var(--green); margin-right: 6px; }
-  /* Altura fixa é obrigatória: com maintainAspectRatio:false o Chart.js lê a
-     altura do container, e sem teto ele cresce a cada resize, sem parar. */
+  /* A fixed height is mandatory: with maintainAspectRatio:false Chart.js reads
+     the container height, and with no ceiling it grows on every resize. */
   canvas { width: 100% !important; height: 280px !important; }
   #radarChart { height: 280px !important; }
 
@@ -461,8 +461,8 @@
 const COLORS = ['#00ff41','#ff0055','#00d4ff','#ffbb00','#bf00ff'];
 const REPO_LABELS = {{REPO_LABELS}};
 
-// Há quanto tempo foi a última sincronização. Um pipeline morto tem que
-// aparecer como "SYNCED 3D AGO", não como uma promessa de frescor.
+// How long ago the last sync was. A dead pipeline has to read as
+// "SYNCED 3D AGO", not as a promise of freshness.
 const minutes = (Date.now() - Date.parse("{{SYNC_ISO}}")) / 60000;
 document.getElementById('sync-ago').textContent =
   minutes < 2 ? 'JUST NOW'
