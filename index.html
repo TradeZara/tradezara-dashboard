@@ -183,7 +183,10 @@
     margin-bottom: 14px;
   }
   .chart-title span { color: var(--green); margin-right: 6px; }
-  canvas { width: 100% !important; }
+  /* Altura fixa é obrigatória: com maintainAspectRatio:false o Chart.js lê a
+     altura do container, e sem teto ele cresce a cada resize, sem parar. */
+  canvas { width: 100% !important; height: 280px !important; }
+  #radarChart { height: 280px !important; }
 
   /* LEADERBOARD */
   .lb-wrap {
@@ -360,23 +363,23 @@
 <div class="hero">
   <div class="hero-title">// DEVELOPER COMMAND CENTER<span class="cursor">_</span></div>
   <div class="hero-sub">CONTRIBUTOR INTELLIGENCE &amp; CODEBASE ANALYTICS</div>
-  <div class="hero-ts">LAST SYNC: <span>2026-08-06 00:00:13 UTC</span></div>
+  <div class="hero-ts">LAST SYNC: <span>2026-08-06 00:08:31 UTC</span></div>
 </div>
 
 <div class="metrics">
   <div class="metric">
     <div class="metric-label">Total Commits</div>
-    <div class="metric-value">2309</div>
+    <div class="metric-value">1764</div>
     <div class="metric-sub">across all repositories</div>
   </div>
   <div class="metric">
     <div class="metric-label">PRs Merged</div>
-    <div class="metric-value">636</div>
+    <div class="metric-value">621</div>
     <div class="metric-sub">reviewed &amp; shipped</div>
   </div>
   <div class="metric">
     <div class="metric-label">Contributors</div>
-    <div class="metric-value">21</div>
+    <div class="metric-value">6</div>
     <div class="metric-sub">active developers</div>
   </div>
   <div class="metric">
@@ -463,28 +466,12 @@
       <tr class="lb-row" style="animation-delay:0.15s">
         <td class="lb-rank" style="color:#00d4ff">03</td>
         <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/81847?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=claude&background=0d1117&color=00d4ff&size=32'">
-          <span style="color:#00d4ff">claude</span>
+          <img src="https://avatars.githubusercontent.com/u/69439752?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=robsongade&background=0d1117&color=00d4ff&size=32'">
+          <span style="color:#00d4ff">robsongade</span>
         </td>
         <td class="lb-commits">
           <div class="lb-bar-wrap">
             <div class="lb-bar" style="width:28%;background:#00d4ff"></div>
-            <span>237</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">3</td>
-        <td class="lb-last">2026-07-19</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.20s">
-        <td class="lb-rank" style="color:#ffbb00">04</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/69439752?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=robsongade&background=0d1117&color=ffbb00&size=32'">
-          <span style="color:#ffbb00">robsongade</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:28%;background:#ffbb00"></div>
             <span>235</span>
           </div>
         </td>
@@ -492,47 +479,15 @@
         <td class="lb-repos">1</td>
         <td class="lb-last">2026-07-19</td>
       </tr>
-      <tr class="lb-row" style="animation-delay:0.25s">
-        <td class="lb-rank" style="color:#bf00ff">05</td>
+      <tr class="lb-row" style="animation-delay:0.20s">
+        <td class="lb-rank" style="color:#ffbb00">04</td>
         <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/40393715?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=pssolanki111&background=0d1117&color=bf00ff&size=32'">
-          <span style="color:#bf00ff">pssolanki111</span>
+          <img src="https://avatars.githubusercontent.com/u/100035050?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=allanfigueira&background=0d1117&color=ffbb00&size=32'">
+          <span style="color:#ffbb00">allanfigueira</span>
         </td>
         <td class="lb-commits">
           <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:26%;background:#bf00ff"></div>
-            <span>222</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2025-08-24</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.30s">
-        <td class="lb-rank" style="color:#00ff41">06</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/84391900?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=wellingtomnnb&background=0d1117&color=00ff41&size=32'">
-          <span style="color:#00ff41">wellingtomnnb</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:7%;background:#00ff41"></div>
-            <span>58</span>
-          </div>
-        </td>
-        <td class="lb-prs">6</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2026-01-18</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.35s">
-        <td class="lb-rank" style="color:#ff0055">07</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/100035050?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=allanfigueira&background=0d1117&color=ff0055&size=32'">
-          <span style="color:#ff0055">allanfigueira</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:5%;background:#ff0055"></div>
+            <div class="lb-bar" style="width:5%;background:#ffbb00"></div>
             <span>42</span>
           </div>
         </td>
@@ -540,15 +495,15 @@
         <td class="lb-repos">1</td>
         <td class="lb-last">2026-08-02</td>
       </tr>
-      <tr class="lb-row" style="animation-delay:0.40s">
-        <td class="lb-rank" style="color:#00d4ff">08</td>
+      <tr class="lb-row" style="animation-delay:0.25s">
+        <td class="lb-rank" style="color:#bf00ff">05</td>
         <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/17873774?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=AdoNunes&background=0d1117&color=00d4ff&size=32'">
-          <span style="color:#00d4ff">AdoNunes</span>
+          <img src="https://avatars.githubusercontent.com/u/17873774?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=AdoNunes&background=0d1117&color=bf00ff&size=32'">
+          <span style="color:#bf00ff">AdoNunes</span>
         </td>
         <td class="lb-commits">
           <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:2%;background:#00d4ff"></div>
+            <div class="lb-bar" style="width:2%;background:#bf00ff"></div>
             <span>21</span>
           </div>
         </td>
@@ -556,200 +511,8 @@
         <td class="lb-repos">2</td>
         <td class="lb-last">2026-07-05</td>
       </tr>
-      <tr class="lb-row" style="animation-delay:0.45s">
-        <td class="lb-rank" style="color:#ffbb00">09</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/165371230?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=pranjal-atrigro&background=0d1117&color=ffbb00&size=32'">
-          <span style="color:#ffbb00">pranjal-atrigro</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#ffbb00"></div>
-            <span>7</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2026-06-28</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.50s">
-        <td class="lb-rank" style="color:#bf00ff">10</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/88991002?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=MuradNayal&background=0d1117&color=bf00ff&size=32'">
-          <span style="color:#bf00ff">MuradNayal</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#bf00ff"></div>
-            <span>5</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2023-11-12</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.55s">
-        <td class="lb-rank" style="color:#00ff41">11</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/in/29110?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=dependabot%5Bbot%5D&background=0d1117&color=00ff41&size=32'">
-          <span style="color:#00ff41">dependabot[bot]</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#00ff41"></div>
-            <span>4</span>
-          </div>
-        </td>
-        <td class="lb-prs">4</td>
-        <td class="lb-repos">2</td>
-        <td class="lb-last">2026-07-19</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.60s">
-        <td class="lb-rank" style="color:#ff0055">12</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/40215819?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=DataGasmic&background=0d1117&color=ff0055&size=32'">
-          <span style="color:#ff0055">DataGasmic</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#ff0055"></div>
-            <span>3</span>
-          </div>
-        </td>
-        <td class="lb-prs">3</td>
-        <td class="lb-repos">2</td>
-        <td class="lb-last">2026-06-28</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.65s">
-        <td class="lb-rank" style="color:#00d4ff">13</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/199161495?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=cursoragent&background=0d1117&color=00d4ff&size=32'">
-          <span style="color:#00d4ff">cursoragent</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#00d4ff"></div>
-            <span>2</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2026-06-28</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.70s">
-        <td class="lb-rank" style="color:#ffbb00">14</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/75077277?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Hexzilla&background=0d1117&color=ffbb00&size=32'">
-          <span style="color:#ffbb00">Hexzilla</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#ffbb00"></div>
-            <span>2</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2024-10-06</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.75s">
-        <td class="lb-rank" style="color:#bf00ff">15</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/2305853?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=asmisha&background=0d1117&color=bf00ff&size=32'">
-          <span style="color:#bf00ff">asmisha</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#bf00ff"></div>
-            <span>1</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2022-06-12</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.80s">
-        <td class="lb-rank" style="color:#00ff41">16</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/8985822?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=cirlo&background=0d1117&color=00ff41&size=32'">
-          <span style="color:#00ff41">cirlo</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#00ff41"></div>
-            <span>1</span>
-          </div>
-        </td>
-        <td class="lb-prs">1</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2026-04-12</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.85s">
-        <td class="lb-rank" style="color:#ff0055">17</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/159199919?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Gram9&background=0d1117&color=ff0055&size=32'">
-          <span style="color:#ff0055">Gram9</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#ff0055"></div>
-            <span>1</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2025-07-20</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.90s">
-        <td class="lb-rank" style="color:#00d4ff">18</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/37072229?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=RedstonedLife&background=0d1117&color=00d4ff&size=32'">
-          <span style="color:#00d4ff">RedstonedLife</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#00d4ff"></div>
-            <span>1</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2025-08-03</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:0.95s">
-        <td class="lb-rank" style="color:#ffbb00">19</td>
-        <td class="lb-name">
-          <img src="https://avatars.githubusercontent.com/u/17513370?v=4" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=yarimiz&background=0d1117&color=ffbb00&size=32'">
-          <span style="color:#ffbb00">yarimiz</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#ffbb00"></div>
-            <span>1</span>
-          </div>
-        </td>
-        <td class="lb-prs">0</td>
-        <td class="lb-repos">1</td>
-        <td class="lb-last">2025-08-24</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:1.00s">
-        <td class="lb-rank" style="color:#bf00ff">20</td>
-        <td class="lb-name">
-          <img src="https://ui-avatars.com/api/?name=fly-io%5Bbot%5D&amp;background=0d1117&amp;color=bf00ff&amp;size=32" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=fly-io%5Bbot%5D&background=0d1117&color=bf00ff&size=32'">
-          <span style="color:#bf00ff">fly-io[bot]</span>
-        </td>
-        <td class="lb-commits">
-          <div class="lb-bar-wrap">
-            <div class="lb-bar" style="width:1%;background:#bf00ff"></div>
-            <span>0</span>
-          </div>
-        </td>
-        <td class="lb-prs">1</td>
-        <td class="lb-repos">0</td>
-        <td class="lb-last">—</td>
-      </tr>
-      <tr class="lb-row" style="animation-delay:1.05s">
-        <td class="lb-rank" style="color:#00ff41">21</td>
+      <tr class="lb-row" style="animation-delay:0.30s">
+        <td class="lb-rank" style="color:#00ff41">06</td>
         <td class="lb-name">
           <img src="https://ui-avatars.com/api/?name=tellesLeonardo&amp;background=0d1117&amp;color=00ff41&amp;size=32" class="lb-avatar" onerror="this.src='https://ui-avatars.com/api/?name=tellesLeonardo&background=0d1117&color=00ff41&size=32'">
           <span style="color:#00ff41">tellesLeonardo</span>
@@ -815,28 +578,9 @@
     <div class="contributor-card" data-rank="3">
       <div class="card-rank" style="color:#00d4ff">🔥 #3</div>
       <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/81847?v=4" alt="claude" onerror="this.src='https://ui-avatars.com/api/?name=claude&background=0d1117&color=00d4ff&size=64'">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/69439752?v=4" alt="robsongade" onerror="this.src='https://ui-avatars.com/api/?name=robsongade&background=0d1117&color=00d4ff&size=64'">
         <div class="card-info">
-          <div class="card-name" style="color:#00d4ff">claude</div>
-          <div class="card-stats">
-            <span class="stat-pill">237 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span><span class="repo-badge">pip-matrix</span><span class="repo-badge">databento-server</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:7px;background:#00d4ff"></div><div class="spark-bar" style="height:30px;background:#00d4ff"></div><div class="spark-bar" style="height:28px;background:#00d4ff"></div><div class="spark-bar" style="height:17px;background:#00d4ff"></div><div class="spark-bar" style="height:28px;background:#00d4ff"></div><div class="spark-bar" style="height:16px;background:#00d4ff"></div><div class="spark-bar" style="height:21px;background:#00d4ff"></div><div class="spark-bar" style="height:18px;background:#00d4ff"></div><div class="spark-bar" style="height:20px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2026-01-18</span>
-        <span>🕐 Last: 2026-07-19</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="4">
-      <div class="card-rank" style="color:#ffbb00">💎 #4</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/69439752?v=4" alt="robsongade" onerror="this.src='https://ui-avatars.com/api/?name=robsongade&background=0d1117&color=ffbb00&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ffbb00">robsongade</div>
+          <div class="card-name" style="color:#00d4ff">robsongade</div>
           <div class="card-stats">
             <span class="stat-pill">235 commits</span>
             <span class="stat-pill">72 PRs merged</span>
@@ -844,56 +588,18 @@
         </div>
       </div>
       <div class="card-repos"><span class="repo-badge">pip-matrix</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:20px;background:#ffbb00"></div><div class="spark-bar" style="height:15px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:30px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:8px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div></div>
+      <div class="card-sparkline"><div class="spark-bar" style="height:20px;background:#00d4ff"></div><div class="spark-bar" style="height:15px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:30px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:8px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div></div>
       <div class="card-meta">
         <span>⚡ First: 2025-11-02</span>
         <span>🕐 Last: 2026-07-19</span>
       </div>
     </div>
-    <div class="contributor-card" data-rank="5">
-      <div class="card-rank" style="color:#bf00ff">🚀 #5</div>
+    <div class="contributor-card" data-rank="4">
+      <div class="card-rank" style="color:#ffbb00">💎 #4</div>
       <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/40393715?v=4" alt="pssolanki111" onerror="this.src='https://ui-avatars.com/api/?name=pssolanki111&background=0d1117&color=bf00ff&size=64'">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/100035050?v=4" alt="allanfigueira" onerror="this.src='https://ui-avatars.com/api/?name=allanfigueira&background=0d1117&color=ffbb00&size=64'">
         <div class="card-info">
-          <div class="card-name" style="color:#bf00ff">pssolanki111</div>
-          <div class="card-stats">
-            <span class="stat-pill">222 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">polygon</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2021-08-22</span>
-        <span>🕐 Last: 2025-08-24</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="6">
-      <div class="card-rank" style="color:#00ff41"># #6</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/84391900?v=4" alt="wellingtomnnb" onerror="this.src='https://ui-avatars.com/api/?name=wellingtomnnb&background=0d1117&color=00ff41&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#00ff41">wellingtomnnb</div>
-          <div class="card-stats">
-            <span class="stat-pill">58 commits</span>
-            <span class="stat-pill">6 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-10-26</span>
-        <span>🕐 Last: 2026-01-18</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="7">
-      <div class="card-rank" style="color:#ff0055"># #7</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/100035050?v=4" alt="allanfigueira" onerror="this.src='https://ui-avatars.com/api/?name=allanfigueira&background=0d1117&color=ff0055&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ff0055">allanfigueira</div>
+          <div class="card-name" style="color:#ffbb00">allanfigueira</div>
           <div class="card-stats">
             <span class="stat-pill">42 commits</span>
             <span class="stat-pill">15 PRs merged</span>
@@ -901,18 +607,18 @@
         </div>
       </div>
       <div class="card-repos"><span class="repo-badge">pip-matrix</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:30px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:7px;background:#ff0055"></div><div class="spark-bar" style="height:7px;background:#ff0055"></div><div class="spark-bar" style="height:5px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div></div>
+      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:30px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:7px;background:#ffbb00"></div><div class="spark-bar" style="height:7px;background:#ffbb00"></div><div class="spark-bar" style="height:5px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div></div>
       <div class="card-meta">
         <span>⚡ First: 2026-01-18</span>
         <span>🕐 Last: 2026-08-02</span>
       </div>
     </div>
-    <div class="contributor-card" data-rank="8">
-      <div class="card-rank" style="color:#00d4ff"># #8</div>
+    <div class="contributor-card" data-rank="5">
+      <div class="card-rank" style="color:#bf00ff">🚀 #5</div>
       <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/17873774?v=4" alt="AdoNunes" onerror="this.src='https://ui-avatars.com/api/?name=AdoNunes&background=0d1117&color=00d4ff&size=64'">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/17873774?v=4" alt="AdoNunes" onerror="this.src='https://ui-avatars.com/api/?name=AdoNunes&background=0d1117&color=bf00ff&size=64'">
         <div class="card-info">
-          <div class="card-name" style="color:#00d4ff">AdoNunes</div>
+          <div class="card-name" style="color:#bf00ff">AdoNunes</div>
           <div class="card-stats">
             <span class="stat-pill">21 commits</span>
             <span class="stat-pill">12 PRs merged</span>
@@ -920,242 +626,14 @@
         </div>
       </div>
       <div class="card-repos"><span class="repo-badge">backtesting-framework</span><span class="repo-badge">pip-matrix</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:10px;background:#00d4ff"></div><div class="spark-bar" style="height:10px;background:#00d4ff"></div><div class="spark-bar" style="height:30px;background:#00d4ff"></div><div class="spark-bar" style="height:20px;background:#00d4ff"></div><div class="spark-bar" style="height:30px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div></div>
+      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:10px;background:#bf00ff"></div><div class="spark-bar" style="height:10px;background:#bf00ff"></div><div class="spark-bar" style="height:30px;background:#bf00ff"></div><div class="spark-bar" style="height:20px;background:#bf00ff"></div><div class="spark-bar" style="height:30px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div></div>
       <div class="card-meta">
         <span>⚡ First: 2025-09-21</span>
         <span>🕐 Last: 2026-07-05</span>
       </div>
     </div>
-    <div class="contributor-card" data-rank="9">
-      <div class="card-rank" style="color:#ffbb00"># #9</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/165371230?v=4" alt="pranjal-atrigro" onerror="this.src='https://ui-avatars.com/api/?name=pranjal-atrigro&background=0d1117&color=ffbb00&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ffbb00">pranjal-atrigro</div>
-          <div class="card-stats">
-            <span class="stat-pill">7 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:30px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2026-02-01</span>
-        <span>🕐 Last: 2026-06-28</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="10">
-      <div class="card-rank" style="color:#bf00ff"># #10</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/88991002?v=4" alt="MuradNayal" onerror="this.src='https://ui-avatars.com/api/?name=MuradNayal&background=0d1117&color=bf00ff&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#bf00ff">MuradNayal</div>
-          <div class="card-stats">
-            <span class="stat-pill">5 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">polygon</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2023-10-01</span>
-        <span>🕐 Last: 2023-11-12</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="11">
-      <div class="card-rank" style="color:#00ff41"># #11</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/in/29110?v=4" alt="dependabot[bot]" onerror="this.src='https://ui-avatars.com/api/?name=dependabot%5Bbot%5D&background=0d1117&color=00ff41&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#00ff41">dependabot[bot]</div>
-          <div class="card-stats">
-            <span class="stat-pill">4 commits</span>
-            <span class="stat-pill">4 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span><span class="repo-badge">pip-matrix</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:30px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:15px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-11-09</span>
-        <span>🕐 Last: 2026-07-19</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="12">
-      <div class="card-rank" style="color:#ff0055"># #12</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/40215819?v=4" alt="DataGasmic" onerror="this.src='https://ui-avatars.com/api/?name=DataGasmic&background=0d1117&color=ff0055&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ff0055">DataGasmic</div>
-          <div class="card-stats">
-            <span class="stat-pill">3 commits</span>
-            <span class="stat-pill">3 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">correlation-modelling</span><span class="repo-badge">backtesting-framework</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:30px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-05-25</span>
-        <span>🕐 Last: 2026-06-28</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="13">
-      <div class="card-rank" style="color:#00d4ff"># #13</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/199161495?v=4" alt="cursoragent" onerror="this.src='https://ui-avatars.com/api/?name=cursoragent&background=0d1117&color=00d4ff&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#00d4ff">cursoragent</div>
-          <div class="card-stats">
-            <span class="stat-pill">2 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:30px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2026-05-03</span>
-        <span>🕐 Last: 2026-06-28</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="14">
-      <div class="card-rank" style="color:#ffbb00"># #14</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/75077277?v=4" alt="Hexzilla" onerror="this.src='https://ui-avatars.com/api/?name=Hexzilla&background=0d1117&color=ffbb00&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ffbb00">Hexzilla</div>
-          <div class="card-stats">
-            <span class="stat-pill">2 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">trading-view-ws</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2024-10-06</span>
-        <span>🕐 Last: 2024-10-06</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="15">
-      <div class="card-rank" style="color:#bf00ff"># #15</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/2305853?v=4" alt="asmisha" onerror="this.src='https://ui-avatars.com/api/?name=asmisha&background=0d1117&color=bf00ff&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#bf00ff">asmisha</div>
-          <div class="card-stats">
-            <span class="stat-pill">1 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">polygon</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2022-06-12</span>
-        <span>🕐 Last: 2022-06-12</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="16">
-      <div class="card-rank" style="color:#00ff41"># #16</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/8985822?v=4" alt="cirlo" onerror="this.src='https://ui-avatars.com/api/?name=cirlo&background=0d1117&color=00ff41&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#00ff41">cirlo</div>
-          <div class="card-stats">
-            <span class="stat-pill">1 commits</span>
-            <span class="stat-pill">1 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">pip-matrix</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div><div class="spark-bar" style="height:3px;background:#00ff41"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2026-04-12</span>
-        <span>🕐 Last: 2026-04-12</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="17">
-      <div class="card-rank" style="color:#ff0055"># #17</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/159199919?v=4" alt="Gram9" onerror="this.src='https://ui-avatars.com/api/?name=Gram9&background=0d1117&color=ff0055&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ff0055">Gram9</div>
-          <div class="card-stats">
-            <span class="stat-pill">1 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">backtesting-framework</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div><div class="spark-bar" style="height:3px;background:#ff0055"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-07-20</span>
-        <span>🕐 Last: 2025-07-20</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="18">
-      <div class="card-rank" style="color:#00d4ff"># #18</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/37072229?v=4" alt="RedstonedLife" onerror="this.src='https://ui-avatars.com/api/?name=RedstonedLife&background=0d1117&color=00d4ff&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#00d4ff">RedstonedLife</div>
-          <div class="card-stats">
-            <span class="stat-pill">1 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">polygon</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div><div class="spark-bar" style="height:3px;background:#00d4ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-08-03</span>
-        <span>🕐 Last: 2025-08-03</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="19">
-      <div class="card-rank" style="color:#ffbb00"># #19</div>
-      <div class="card-header">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/17513370?v=4" alt="yarimiz" onerror="this.src='https://ui-avatars.com/api/?name=yarimiz&background=0d1117&color=ffbb00&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#ffbb00">yarimiz</div>
-          <div class="card-stats">
-            <span class="stat-pill">1 commits</span>
-            <span class="stat-pill">0 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"><span class="repo-badge">polygon</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div><div class="spark-bar" style="height:3px;background:#ffbb00"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: 2025-08-24</span>
-        <span>🕐 Last: 2025-08-24</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="20">
-      <div class="card-rank" style="color:#bf00ff"># #20</div>
-      <div class="card-header">
-        <img class="avatar" src="https://ui-avatars.com/api/?name=fly-io%5Bbot%5D&amp;background=0d1117&amp;color=bf00ff&amp;size=64" alt="fly-io[bot]" onerror="this.src='https://ui-avatars.com/api/?name=fly-io%5Bbot%5D&background=0d1117&color=bf00ff&size=64'">
-        <div class="card-info">
-          <div class="card-name" style="color:#bf00ff">fly-io[bot]</div>
-          <div class="card-stats">
-            <span class="stat-pill">0 commits</span>
-            <span class="stat-pill">1 PRs merged</span>
-          </div>
-        </div>
-      </div>
-      <div class="card-repos"></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div><div class="spark-bar" style="height:3px;background:#bf00ff"></div></div>
-      <div class="card-meta">
-        <span>⚡ First: —</span>
-        <span>🕐 Last: —</span>
-      </div>
-    </div>
-    <div class="contributor-card" data-rank="21">
-      <div class="card-rank" style="color:#00ff41"># #21</div>
+    <div class="contributor-card" data-rank="6">
+      <div class="card-rank" style="color:#00ff41"># #6</div>
       <div class="card-header">
         <img class="avatar" src="https://ui-avatars.com/api/?name=tellesLeonardo&amp;background=0d1117&amp;color=00ff41&amp;size=64" alt="tellesLeonardo" onerror="this.src='https://ui-avatars.com/api/?name=tellesLeonardo&background=0d1117&color=00ff41&size=64'">
         <div class="card-info">
@@ -1191,11 +669,11 @@
 
 <script>
 const COLORS = ['#00ff41','#ff0055','#00d4ff','#ffbb00','#bf00ff'];
-const REPO_LABELS = ["pip-matrix","backtesting-framework","polygon","databento-server","trading-view-ws","graph_api_hft",".github","correlation-modelling","example-api-oauth","tradezara-dashboard"];
+const REPO_LABELS = ["pip-matrix","backtesting-framework","trading-view-ws","databento-server","graph_api_hft","polygon",".github","example-api-oauth","tradezara-dashboard","correlation-modelling"];
 
 // Há quanto tempo foi a última sincronização. Um pipeline morto tem que
 // aparecer como "SYNCED 3D AGO", não como uma promessa de frescor.
-const minutes = (Date.now() - Date.parse("2026-08-06T00:00:13.149Z")) / 60000;
+const minutes = (Date.now() - Date.parse("2026-08-06T00:08:31.866Z")) / 60000;
 document.getElementById('sync-ago').textContent =
   minutes < 2 ? 'JUST NOW'
   : minutes < 60 ? `${Math.floor(minutes)}M AGO`
@@ -1212,7 +690,7 @@ new Chart(document.getElementById('activityChart'), {
   type: 'line',
   data: {
     labels: ["2026-05-17","2026-05-24","2026-05-31","2026-06-07","2026-06-14","2026-06-21","2026-06-28","2026-07-05","2026-07-12","2026-07-19","2026-07-26","2026-08-02"],
-    datasets: [{"label":"ArtBreguez","data":[25,18,0,19,32,15,1,7,33,13,11,7],"borderColor":"#00ff41","backgroundColor":"#00ff4122","tension":0.4,"fill":false,"pointRadius":3},{"label":"Antonio-Ramon","data":[10,21,54,39,16,17,20,30,29,40,38,10],"borderColor":"#ff0055","backgroundColor":"#ff005522","tension":0.4,"fill":false,"pointRadius":3},{"label":"claude","data":[0,8,36,34,20,34,19,25,21,24,0,0],"borderColor":"#00d4ff","backgroundColor":"#00d4ff22","tension":0.4,"fill":false,"pointRadius":3},{"label":"robsongade","data":[12,9,1,18,2,2,5,0,0,1,0,0],"borderColor":"#ffbb00","backgroundColor":"#ffbb0022","tension":0.4,"fill":false,"pointRadius":3},{"label":"pssolanki111","data":[0,0,0,0,0,0,0,0,0,0,0,0],"borderColor":"#bf00ff","backgroundColor":"#bf00ff22","tension":0.4,"fill":false,"pointRadius":3}]
+    datasets: [{"label":"ArtBreguez","data":[25,18,0,19,32,15,1,7,33,13,11,7],"borderColor":"#00ff41","backgroundColor":"#00ff4122","tension":0.4,"fill":false,"pointRadius":3},{"label":"Antonio-Ramon","data":[10,21,54,39,16,17,20,30,29,40,38,10],"borderColor":"#ff0055","backgroundColor":"#ff005522","tension":0.4,"fill":false,"pointRadius":3},{"label":"robsongade","data":[12,9,1,18,2,2,5,0,0,1,0,0],"borderColor":"#00d4ff","backgroundColor":"#00d4ff22","tension":0.4,"fill":false,"pointRadius":3},{"label":"allanfigueira","data":[0,13,0,3,3,2,1,0,1,1,0,1],"borderColor":"#ffbb00","backgroundColor":"#ffbb0022","tension":0.4,"fill":false,"pointRadius":3},{"label":"AdoNunes","data":[0,0,0,1,1,3,2,3,0,0,0,0],"borderColor":"#bf00ff","backgroundColor":"#bf00ff22","tension":0.4,"fill":false,"pointRadius":3}]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
@@ -1233,7 +711,7 @@ new Chart(document.getElementById('repoChart'), {
     labels: REPO_LABELS,
     datasets: [{
       label: 'Commits',
-      data: [1087,863,242,51,41,12,10,1,1,1],
+      data: [910,748,39,31,12,12,10,1,1,0],
       backgroundColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length] + '88'),
       borderColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length]),
       borderWidth: 1,
@@ -1256,7 +734,7 @@ new Chart(document.getElementById('radarChart'), {
   type: 'radar',
   data: {
     labels: ["Commits", "PRs", "Repos", "Recency"],
-    datasets: [{"label":"ArtBreguez","data":[100,100,100,99],"borderColor":"#00ff41","backgroundColor":"#00ff4133","pointBackgroundColor":"#00ff41"},{"label":"Antonio-Ramon","data":[72,50,22,99],"borderColor":"#ff0055","backgroundColor":"#ff005533","pointBackgroundColor":"#ff0055"},{"label":"claude","data":[28,0,33,95],"borderColor":"#00d4ff","backgroundColor":"#00d4ff33","pointBackgroundColor":"#00d4ff"},{"label":"robsongade","data":[28,21,11,95],"borderColor":"#ffbb00","backgroundColor":"#ffbb0033","pointBackgroundColor":"#ffbb00"},{"label":"pssolanki111","data":[26,0,11,5],"borderColor":"#bf00ff","backgroundColor":"#bf00ff33","pointBackgroundColor":"#bf00ff"}]
+    datasets: [{"label":"ArtBreguez","data":[100,100,100,99],"borderColor":"#00ff41","backgroundColor":"#00ff4133","pointBackgroundColor":"#00ff41"},{"label":"Antonio-Ramon","data":[72,50,22,99],"borderColor":"#ff0055","backgroundColor":"#ff005533","pointBackgroundColor":"#ff0055"},{"label":"robsongade","data":[28,21,11,95],"borderColor":"#00d4ff","backgroundColor":"#00d4ff33","pointBackgroundColor":"#00d4ff"},{"label":"allanfigueira","data":[5,4,11,99],"borderColor":"#ffbb00","backgroundColor":"#ffbb0033","pointBackgroundColor":"#ffbb00"},{"label":"AdoNunes","data":[2,3,22,91],"borderColor":"#bf00ff","backgroundColor":"#bf00ff33","pointBackgroundColor":"#bf00ff"}]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
@@ -1275,7 +753,7 @@ new Chart(document.getElementById('radarChart'), {
 });
 
 // Repo cards
-const repoData = {"pip-matrix":{"commits":1087,"contributors":8},"backtesting-framework":{"commits":863,"contributors":10},"polygon":{"commits":242,"contributors":6},"databento-server":{"commits":51,"contributors":2},"trading-view-ws":{"commits":41,"contributors":2},"graph_api_hft":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"correlation-modelling":{"commits":1,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"tradezara-dashboard":{"commits":1,"contributors":1}};
+const repoData = {"pip-matrix":{"commits":910,"contributors":5},"backtesting-framework":{"commits":748,"contributors":3},"trading-view-ws":{"commits":39,"contributors":1},"databento-server":{"commits":31,"contributors":1},"graph_api_hft":{"commits":12,"contributors":1},"polygon":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"tradezara-dashboard":{"commits":1,"contributors":1},"correlation-modelling":{"commits":0,"contributors":0}};
 const grid = document.getElementById('repo-grid');
 const repoColors = ['#00d4ff','#00ff41','#ff0055','#ffbb00','#bf00ff','#00d4ff','#00ff41'];
 Object.entries(repoData).forEach(([repo, stats], i) => {

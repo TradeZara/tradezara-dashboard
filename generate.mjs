@@ -14,7 +14,6 @@ const SPARK_MIN = 3
 const SPARK_MAX = 30
 const RECENCY_ZERO_DAYS = 365 // atividade mais velha que isso zera o eixo de recência do radar
 const DAY = 86400
-export const UNLINKED = 'sem conta vinculada'
 
 // ---------- transformação pura (a costura testada) ----------
 
@@ -26,8 +25,16 @@ export function isStillComputing(status, contributors) {
 
 const iso = epochSeconds => new Date(epochSeconds * 1000).toISOString().slice(0, 10)
 
-/** repos: [{ name, contributors: [{ author, total, weeks }], pulls: [{ user, merged_at }] }] */
-export function buildModel(repos, syncedAt) {
+/** repos: [{ name, contributors: [{ author, total, weeks }], pulls: [{ user, merged_at }] }]
+ *  members: Set de logins da organização. Só eles entram no painel — bots,
+ *  contribuidores externos e autores sem conta vinculada ficam de fora. */
+export function buildModel(repos, syncedAt, members) {
+  repos = repos.map(r => ({
+    ...r,
+    contributors: r.contributors.filter(c => members.has(c.author?.login)),
+    pulls: (r.pulls ?? []).filter(p => members.has(p.user?.login)),
+  }))
+
   const people = new Map()
   const person = login => {
     if (!people.has(login)) {
@@ -38,7 +45,7 @@ export function buildModel(repos, syncedAt) {
 
   for (const repo of repos) {
     for (const c of repo.contributors) {
-      const p = person(c.author?.login ?? UNLINKED)
+      const p = person(c.author.login)
       p.avatar ??= c.author?.avatar_url ?? null
       p.commits += c.total
       if (!p.repos.includes(repo.name)) p.repos.push(repo.name)
@@ -47,8 +54,8 @@ export function buildModel(repos, syncedAt) {
       }
     }
     // PRs fechados sem merge não contam
-    for (const pr of repo.pulls ?? []) {
-      if (pr.merged_at) person(pr.user?.login ?? UNLINKED).prs++
+    for (const pr of repo.pulls) {
+      if (pr.merged_at) person(pr.user.login).prs++
     }
   }
 
@@ -274,6 +281,11 @@ async function main() {
   const token = process.env.GITHUB_TOKEN
   if (!token) throw new Error('GITHUB_TOKEN ausente — o gerador não roda sem token de leitura da org')
 
+  // Um token sem visibilidade da organização devolve poucos membros ou nenhum,
+  // e o filtro apagaria o painel inteiro. Melhor falhar que publicar vazio.
+  const members = new Set((await paginate(token, `/orgs/${ORG}/members?`)).map(m => m.login))
+  if (members.size === 0) throw new Error('nenhum membro da organização visível — token sem read:org?')
+
   const names = (await paginate(token, `/orgs/${ORG}/repos?type=all`)).filter(r => !r.archived).map(r => r.name)
   const repos = []
   for (const name of names) {
@@ -284,7 +296,7 @@ async function main() {
     })
   }
 
-  const model = buildModel(repos, new Date())
+  const model = buildModel(repos, new Date(), members)
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
   await writeFile(new URL('./index.html', import.meta.url), render(template, model))
 

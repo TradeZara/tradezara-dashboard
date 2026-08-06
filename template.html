@@ -183,7 +183,10 @@
     margin-bottom: 14px;
   }
   .chart-title span { color: var(--green); margin-right: 6px; }
-  canvas { width: 100% !important; }
+  /* Altura fixa é obrigatória: com maintainAspectRatio:false o Chart.js lê a
+     altura do container, e sem teto ele cresce a cada resize, sem parar. */
+  canvas { width: 100% !important; height: 280px !important; }
+  #radarChart { height: 280px !important; }
 
   /* LEADERBOARD */
   .lb-wrap {

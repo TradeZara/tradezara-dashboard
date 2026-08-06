@@ -12,6 +12,11 @@ descartada na próxima execução do gerador. Para mudar aparência, edite
 organização pela API do GitHub, coleta as estatísticas de contribuidores e os
 PRs mergeados, e reescreve `index.html` a partir de `template.html`.
 
+Só entra no painel quem consta em **membros da organização**. Bots, mantenedores
+externos e autores cujo commit não está vinculado a uma conta ficam de fora — daí
+o token precisar enxergar a lista de membros, ou o filtro esvazia o painel (o
+gerador aborta nesse caso). Entrou alguém novo no time? Basta adicionar à org.
+
 Uma GitHub Action roda isso de hora em hora e commita o arquivo **apenas quando
 o HTML muda** — o histórico não enche de commits vazios.
 

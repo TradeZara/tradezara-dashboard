@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { buildModel, isStillComputing, radarAxes, render, UNLINKED } from './generate.mjs'
+import { buildModel, isStillComputing, radarAxes, render } from './generate.mjs'
 
 const WEEK = 7 * 86400
 const SYNCED = new Date('2026-08-05T12:00:00Z')
@@ -15,10 +15,20 @@ const person = (login, total, weeks = [{ w: weekAgo(1), c: total }]) => ({
 const merged = login => ({ user: { login }, merged_at: '2026-07-01T00:00:00Z' })
 const abandoned = login => ({ user: { login }, merged_at: null })
 
+/** Por padrão todo mundo do fixture é membro da org; os testes de filtro passam
+ *  a lista de membros explicitamente. */
+const build = (repos, syncedAt = SYNCED, members) =>
+  buildModel(repos, syncedAt, new Set(members ?? everyone(repos)))
+
+const everyone = repos =>
+  repos
+    .flatMap(r => [...r.contributors.map(c => c.author?.login), ...(r.pulls ?? []).map(p => p.user.login)])
+    .filter(Boolean)
+
 // ---------- agregação de commits ----------
 
 test('soma commits do mesmo login entre repositórios', () => {
-  const model = buildModel([
+  const model = build([
     { name: 'pip-matrix', contributors: [person('ArtBreguez', 581), person('claude', 200)] },
     { name: 'databento-server', contributors: [person('ArtBreguez', 20)] },
   ], SYNCED)
@@ -30,24 +40,36 @@ test('soma commits do mesmo login entre repositórios', () => {
   assert.deepEqual(model.contributors[0].repos, ['pip-matrix', 'databento-server'])
 })
 
-test('bots entram no ranking como qualquer contribuidor', () => {
-  const model = buildModel([
-    { name: 'pip-matrix', contributors: [person('claude', 900), person('Antonio-Ramon', 581)] },
-  ], SYNCED)
-  assert.equal(model.contributors[0].login, 'claude')
+test('só entra no painel quem é membro da organização', () => {
+  const model = build(
+    [{
+      name: 'pip-matrix',
+      contributors: [person('claude', 900), person('Antonio-Ramon', 581), person('externo', 300)],
+      pulls: [merged('claude'), merged('externo'), merged('Antonio-Ramon')],
+    }],
+    SYNCED,
+    ['Antonio-Ramon'],
+  )
+
+  assert.deepEqual(model.contributors.map(c => c.login), ['Antonio-Ramon'])
+  assert.equal(model.totals.commits, 581, 'commits de fora da org não entram no total')
+  assert.equal(model.totals.prs, 1)
+  assert.equal(model.repos[0].commits, 581, 'o total do repositório também respeita o filtro')
 })
 
-test('autores sem conta vinculada viram um balde explícito, não somem', () => {
-  const model = buildModel([
-    { name: 'pip-matrix', contributors: [person('ArtBreguez', 10), person(null, 7), person(null, 3)] },
-  ], SYNCED)
+test('autor sem conta vinculada não entra — não há como saber se é da org', () => {
+  const model = build(
+    [{ name: 'pip-matrix', contributors: [person('Antonio-Ramon', 10), person(null, 7)] }],
+    SYNCED,
+    ['Antonio-Ramon'],
+  )
 
-  assert.equal(model.totals.commits, 20)
-  assert.equal(model.contributors.find(c => c.login === UNLINKED).commits, 10)
+  assert.equal(model.totals.commits, 10)
+  assert.equal(model.totals.contributors, 1)
 })
 
 test('o número do topo bate com a soma das linhas do leaderboard', () => {
-  const model = buildModel([
+  const model = build([
     { name: 'a', contributors: [person('x', 300), person('y', 45)], pulls: [merged('x'), merged('y')] },
     { name: 'b', contributors: [person('z', 1)], pulls: [merged('z')] },
   ], SYNCED)
@@ -58,14 +80,14 @@ test('o número do topo bate com a soma das linhas do leaderboard', () => {
 })
 
 test('nenhum teto de paginação: o total do contribuidor é o que a API reporta', () => {
-  const model = buildModel([{ name: 'pip-matrix', contributors: [person('Antonio-Ramon', 581)] }], SYNCED)
+  const model = build([{ name: 'pip-matrix', contributors: [person('Antonio-Ramon', 581)] }], SYNCED)
   assert.equal(model.totals.commits, 581)
 })
 
 // ---------- PRs ----------
 
 test('conta PRs mergeados por autor e ignora os fechados sem merge', () => {
-  const model = buildModel([{
+  const model = build([{
     name: 'pip-matrix',
     contributors: [person('x', 5), person('y', 5)],
     pulls: [merged('x'), merged('x'), abandoned('x'), abandoned('y')],
@@ -79,7 +101,7 @@ test('conta PRs mergeados por autor e ignora os fechados sem merge', () => {
 // ---------- datas e séries semanais ----------
 
 test('primeira e última atividade vêm das semanas com contagem diferente de zero', () => {
-  const model = buildModel([{
+  const model = build([{
     name: 'a',
     contributors: [person('x', 9, [
       { w: weekAgo(9), c: 0 },
@@ -95,7 +117,7 @@ test('primeira e última atividade vêm das semanas com contagem diferente de ze
 })
 
 test('as semanas do gráfico são datas de calendário, não W1..W12', () => {
-  const model = buildModel([{ name: 'a', contributors: [person('x', 3)] }], SYNCED)
+  const model = build([{ name: 'a', contributors: [person('x', 3)] }], SYNCED)
   assert.equal(model.weeks.length, 12)
   assert.match(new Date(model.weeks[0] * 1000).toISOString().slice(0, 10), /^\d{4}-\d{2}-\d{2}$/)
   assert.ok(model.weeks.every((w, i) => i === 0 || w - model.weeks[i - 1] === WEEK))
@@ -105,7 +127,7 @@ test('as semanas ancoram no que a API reportou, não no relógio da execução',
   // A API alinha as semanas no domingo; a época do Unix cai numa quinta.
   // Ancorar no relógio desalinha as chaves e zera todas as séries.
   const domingo = Math.floor(Date.parse('2026-08-02T00:00:00Z') / 1000)
-  const model = buildModel(
+  const model = build(
     [{ name: 'a', contributors: [person('x', 7, [{ w: domingo, c: 7 }])] }],
     new Date('2026-08-06T09:00:00Z'), // quinta, o dia em que o bug aparecia
   )
@@ -118,7 +140,7 @@ test('as semanas ancoram no que a API reportou, não no relógio da execução',
 // ---------- repositórios ----------
 
 test('repositórios saem ordenados por commits, com contagem de contribuidores', () => {
-  const model = buildModel([
+  const model = build([
     { name: 'pequeno', contributors: [person('x', 1)] },
     { name: 'grande', contributors: [person('y', 300), person('z', 20)] },
   ], SYNCED)
@@ -131,7 +153,7 @@ test('repositórios saem ordenados por commits, com contagem de contribuidores',
 // ---------- radar ----------
 
 test('radar normaliza contra o topo da organização e decai com o tempo', () => {
-  const model = buildModel([{
+  const model = build([{
     name: 'a',
     contributors: [
       person('lider', 100, [{ w: weekAgo(1), c: 100 }]),
@@ -158,10 +180,10 @@ test('202 é "ainda calculando", não "repositório sem contribuidores"', () => 
 
 // ---------- render ----------
 
-const fullModel = () => buildModel([
-  { name: 'pip-matrix', contributors: [person('ArtBreguez', 581), person(null, 4)], pulls: [merged('ArtBreguez')] },
-  { name: 'databento-server', contributors: [person('claude', 42)], pulls: [abandoned('claude')] },
-], SYNCED)
+const fullModel = () => build([
+  { name: 'pip-matrix', contributors: [person('ArtBreguez', 581), person('Antonio-Ramon', 4)], pulls: [merged('ArtBreguez')] },
+  { name: 'databento-server', contributors: [person('claude', 42)], pulls: [abandoned('ArtBreguez')] },
+], SYNCED, ['ArtBreguez', 'Antonio-Ramon'])
 
 test('o template real não sai com placeholder por preencher', async () => {
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
@@ -180,16 +202,17 @@ test('o JSON entregue aos gráficos é válido e carrega as séries reais', () =
 test('repoData entrega contributors como contagem, que é o que o card mostra', () => {
   const repoData = JSON.parse(render('{{REPO_DATA}}', fullModel()))
   assert.deepEqual(repoData['pip-matrix'], { commits: 585, contributors: 2 })
+  assert.deepEqual(repoData['databento-server'], { commits: 0, contributors: 0 }, 'repo só com bot zera')
   assert.equal(typeof repoData['pip-matrix'].contributors, 'number')
 })
 
 test('login é escapado antes de entrar no HTML', () => {
-  const model = buildModel([{ name: 'a', contributors: [person('<script>x</script>', 1)] }], SYNCED)
+  const model = build([{ name: 'a', contributors: [person('<script>x</script>', 1)] }], SYNCED)
   const html = render('{{LEADERBOARD_ROWS}}', model)
   assert.doesNotMatch(html, /<script>/)
   assert.match(html, /&lt;script&gt;/)
 })
 
 test('placeholder desconhecido explode em vez de vazar para a página', () => {
-  assert.throws(() => render('{{TOTAL_STARS}}', buildModel([], SYNCED)), /TOTAL_STARS/)
+  assert.throws(() => render('{{TOTAL_STARS}}', build([], SYNCED)), /TOTAL_STARS/)
 })
