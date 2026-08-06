@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+# um disparo manual em cima do cron corre para o mesmo push
+concurrency: refresh-dashboard
+
 jobs:
   refresh:
     runs-on: ubuntu-latest

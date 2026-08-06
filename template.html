@@ -354,7 +354,7 @@
   <div class="nav-logo">TRADE<span>ZARA</span></div>
   <div class="nav-tag">internal</div>
   <div class="nav-tag">v2.0</div>
-  <div class="nav-live">LIVE DASHBOARD · SYNCED {{SYNC_AGO}}</div>
+  <div class="nav-live">LIVE DASHBOARD · SYNCED <span id="sync-ago">…</span></div>
 </nav>
 
 <div class="hero">
@@ -458,6 +458,15 @@
 const COLORS = ['#00ff41','#ff0055','#00d4ff','#ffbb00','#bf00ff'];
 const REPO_LABELS = {{REPO_LABELS}};
 
+// Há quanto tempo foi a última sincronização. Um pipeline morto tem que
+// aparecer como "SYNCED 3D AGO", não como uma promessa de frescor.
+const minutes = (Date.now() - Date.parse("{{SYNC_ISO}}")) / 60000;
+document.getElementById('sync-ago').textContent =
+  minutes < 2 ? 'JUST NOW'
+  : minutes < 60 ? `${Math.floor(minutes)}M AGO`
+  : minutes < 1440 ? `${Math.floor(minutes / 60)}H AGO`
+  : `${Math.floor(minutes / 1440)}D AGO`;
+
 Chart.defaults.color = '#8b949e';
 Chart.defaults.borderColor = '#21262d';
 Chart.defaults.font.family = "'SF Mono', 'Fira Code', monospace";
@@ -540,7 +549,7 @@ Object.entries(repoData).forEach(([repo, stats], i) => {
     <div class="repo-card">
       <div class="repo-card-name" style="color:${c}">${repo}</div>
       <div class="repo-card-stat">Commits: <span>${stats.commits}</span></div>
-      <div class="repo-card-stat">Contributors: <span>${stats.contributors.length}</span></div>
+      <div class="repo-card-stat">Contributors: <span>${stats.contributors}</span></div>
     </div>`;
 });
 </script>

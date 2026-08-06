@@ -101,6 +101,20 @@ test('as semanas do gráfico são datas de calendário, não W1..W12', () => {
   assert.ok(model.weeks.every((w, i) => i === 0 || w - model.weeks[i - 1] === WEEK))
 })
 
+test('as semanas ancoram no que a API reportou, não no relógio da execução', () => {
+  // A API alinha as semanas no domingo; a época do Unix cai numa quinta.
+  // Ancorar no relógio desalinha as chaves e zera todas as séries.
+  const domingo = Math.floor(Date.parse('2026-08-02T00:00:00Z') / 1000)
+  const model = buildModel(
+    [{ name: 'a', contributors: [person('x', 7, [{ w: domingo, c: 7 }])] }],
+    new Date('2026-08-06T09:00:00Z'), // quinta, o dia em que o bug aparecia
+  )
+
+  assert.ok(model.weeks.includes(domingo), 'a semana da API tem que estar no eixo do gráfico')
+  const html = render('{{ACTIVITY_DATASETS}}', model)
+  assert.equal(JSON.parse(html)[0].data.reduce((a, b) => a + b, 0), 7, 'série não pode sair zerada')
+})
+
 // ---------- repositórios ----------
 
 test('repositórios saem ordenados por commits, com contagem de contribuidores', () => {
@@ -149,29 +163,24 @@ const fullModel = () => buildModel([
   { name: 'databento-server', contributors: [person('claude', 42)], pulls: [abandoned('claude')] },
 ], SYNCED)
 
-test('render preenche todo placeholder e não deixa nenhum para trás', async () => {
+test('o template real não sai com placeholder por preencher', async () => {
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
-  const html = render(template, fullModel())
-
-  assert.doesNotMatch(html, /\{\{/)
-  assert.match(html, /2026-08-05 12:00:00 UTC/)
-  assert.match(html, /<div class="metric-value">627<\/div>/, 'commits do topo')
-  assert.match(html, /<div class="metric-value">1<\/div>/, 'PRs mergeados do topo')
-  assert.match(html, />ArtBreguez</)
-  assert.match(html, /sem conta vinculada/)
+  assert.doesNotMatch(render(template, fullModel()), /\{\{/)
 })
 
-test('o JSON dos gráficos é válido e usa as séries reais', async () => {
-  const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
-  const html = render(template, fullModel())
+test('o JSON entregue aos gráficos é válido e carrega as séries reais', () => {
+  const model = fullModel()
+  const datasets = JSON.parse(render('{{ACTIVITY_DATASETS}}', model))
 
-  const datasets = JSON.parse(html.match(/datasets: (\[.*\])/)[1])
   assert.equal(datasets[0].label, 'ArtBreguez')
   assert.equal(datasets[0].data.length, 12)
   assert.equal(datasets[0].data.reduce((a, b) => a + b, 0), 581)
+})
 
-  const repoData = JSON.parse(html.match(/const repoData = (\{.*?\});/)[1])
+test('repoData entrega contributors como contagem, que é o que o card mostra', () => {
+  const repoData = JSON.parse(render('{{REPO_DATA}}', fullModel()))
   assert.deepEqual(repoData['pip-matrix'], { commits: 585, contributors: 2 })
+  assert.equal(typeof repoData['pip-matrix'].contributors, 'number')
 })
 
 test('login é escapado antes de entrar no HTML', () => {

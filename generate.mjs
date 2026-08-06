@@ -71,7 +71,7 @@ export function buildModel(repos, syncedAt) {
     syncedAt,
     contributors,
     repos: repoTotals,
-    weeks: recentWeeks(contributors, syncedAt),
+    weeks: recentWeeks(contributors),
     totals: {
       commits: contributors.reduce((t, c) => t + c.commits, 0),
       prs: contributors.reduce((t, c) => t + c.prs, 0),
@@ -81,12 +81,14 @@ export function buildModel(repos, syncedAt) {
   }
 }
 
-/** As últimas WEEKS semanas de calendário, alinhadas ao domingo como a API entrega. */
-function recentWeeks(contributors, syncedAt) {
+/** As últimas WEEKS semanas que a API reportou. Ancorar no relógio local
+ *  desalinharia as chaves (a época do Unix cai numa quinta, as semanas da API
+ *  começam no domingo) e zeraria todas as séries. */
+function recentWeeks(contributors) {
   const all = new Set()
   for (const c of contributors) for (const w of c.weeks.keys()) all.add(w)
   if (all.size === 0) return []
-  const latest = Math.max(...all, Math.floor(syncedAt.getTime() / 1000 / (7 * DAY)) * 7 * DAY)
+  const latest = Math.max(...all)
   return Array.from({ length: WEEKS }, (_, i) => latest - (WEEKS - 1 - i) * 7 * DAY)
 }
 
@@ -185,7 +187,7 @@ export function render(template, model) {
   const values = {
     SYNC_AT: t.toISOString().slice(0, 19).replace('T', ' ') + ' UTC',
     SYNC_DATE: t.toISOString().slice(0, 10),
-    SYNC_AGO: 'JUST NOW',
+    SYNC_ISO: t.toISOString(), // o "há quanto tempo" é calculado no browser
     TOTAL_COMMITS: model.totals.commits,
     TOTAL_PRS: model.totals.prs,
     TOTAL_CONTRIBUTORS: model.totals.contributors,
@@ -238,7 +240,8 @@ async function api(token, path) {
     limit: res.headers.get('x-ratelimit-limit'),
   }
   if (res.status === 401 || res.status === 403) {
-    throw new Error(`credencial recusada pela API (${res.status}) em ${path}`)
+    const cause = rateLimit.remaining === '0' ? 'rate limit esgotado' : 'credencial recusada'
+    throw new Error(`${cause} (${res.status}) em ${path}`)
   }
   if (!res.ok && res.status !== 202) throw new Error(`GET ${path} → ${res.status}`)
   const body = await res.text()
