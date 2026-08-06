@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 # a manual dispatch on top of the cron races for the same push
 concurrency: refresh-dashboard
@@ -16,6 +18,9 @@ concurrency: refresh-dashboard
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,3 +48,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore: refresh dashboard" index.html
           git push
+
+      # Pages deploys via Actions: the legacy branch-deploy pipeline for this
+      # repo is stuck (deploys queue for 10 min and time out), so we publish
+      # the artifact ourselves and skip that pipeline entirely.
+      - name: Package site
+        run: mkdir -p _site && cp index.html _site/
+
+      - uses: actions/upload-pages-artifact@v3
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
