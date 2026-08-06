@@ -2,8 +2,9 @@ name: Refresh dashboard
 
 on:
   schedule:
-    # every 5 minutes — the shortest interval GitHub accepts
-    - cron: '*/5 * * * *'
+    # hourly. Every run commits (the badge carries the sync timestamp), and every
+    # commit fires a Pages build — a shorter interval piles deploys on each other.
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:

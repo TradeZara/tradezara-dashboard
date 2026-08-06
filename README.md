@@ -18,12 +18,19 @@ out — which is why the token must be able to see the member list, or the filte
 would empty the panel (the generator aborts in that case). Someone new joined the
 team? Adding them to the org is enough.
 
-A GitHub Action runs this every 5 minutes and commits the file **only when the
-HTML changes**, so the history doesn't fill up with empty commits.
+A GitHub Action runs this hourly. Expect one `chore: refresh dashboard` commit
+per hour whether or not any number moved: the page carries the sync timestamp,
+so the HTML differs on every run by design. That is what keeps the
+`SYNCED … AGO` badge honest — a dead pipeline shows up on the page instead of
+quietly serving stale data.
 
-Scheduled workflows are best-effort: GitHub queues them on shared runners and
-delays or drops runs under load, so treat 5 minutes as a floor, not a guarantee.
-The `SYNCED … AGO` badge in the navbar is what tells you the real freshness.
+Don't shorten the interval without measuring the Pages build first. Every commit
+fires a Pages deploy, and deploys that overlap queue up and time out. Scheduled
+workflows are also best-effort: GitHub delays or drops runs under load, so
+hourly is a target, not a guarantee.
+
+`.nojekyll` at the root keeps Pages from running Jekyll over a page that doesn't
+need it — it's the difference between a deploy of seconds and one of minutes.
 
 If collecting any repository fails after the retries, the generator aborts
 without writing anything: a partial panel looks current while reporting numbers

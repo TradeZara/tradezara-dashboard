@@ -28,9 +28,12 @@ split into three stages — fetch, transform, render:
 - **Render** substitutes `{{PLACEHOLDER}}` tokens in `template.html`. An unknown
   placeholder throws rather than leaking to the page.
 
-A GitHub Action (`.github/workflows/refresh-dashboard.yml`) runs this every 5
-minutes and commits only when the HTML actually changed. The spec specified an
-hourly cron; the team shortened it afterwards.
+A GitHub Action (`.github/workflows/refresh-dashboard.yml`) runs this hourly.
+The commit step guards on `git diff`, but in practice every run commits: the
+page embeds the sync timestamp, so the HTML always differs. That is deliberate —
+the team chose a live `SYNCED … AGO` badge over a quiet history — and it means
+every run triggers a Pages deploy. Shortening the cron makes deploys overlap and
+time out; `.nojekyll` at the root is what keeps a deploy down to seconds.
 
 ## Constraints that are not negotiable
 
