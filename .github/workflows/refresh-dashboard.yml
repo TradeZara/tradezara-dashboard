@@ -2,9 +2,9 @@ name: Refresh dashboard
 
 on:
   schedule:
-    # hourly. Every run commits (the badge carries the sync timestamp), and every
+    # every 6h. Every run commits (the badge carries the sync timestamp), and every
     # commit fires a Pages build — a shorter interval piles deploys on each other.
-    - cron: '0 * * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
