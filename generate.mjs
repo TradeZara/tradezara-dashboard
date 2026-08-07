@@ -3,10 +3,6 @@
 import { readFile, writeFile } from 'node:fs/promises'
 
 const ORG = 'TradeZara'
-// The dashboard doesn't measure itself. Every refresh commits here, which
-// invalidates this repo's contributor stats; the next run then finds a 202 that
-// outlives any retry budget and aborts the whole collection.
-const SELF = 'tradezara-dashboard'
 const API = 'https://api.github.com'
 // A repo that just received a push recomputes its stats; short waits turn that
 // into a red build on every run right after a merge.
@@ -187,8 +183,8 @@ function contributorCards(model) {
       <div class="card-repos">${badges}</div>
       <div class="card-sparkline">${sparkline(series(c, model.weeks), color)}</div>
       <div class="card-meta">
-        <span>⚡ First: ${c.first ?? '—'}</span>
-        <span>🕐 Last: ${c.last ?? '—'}</span>
+        <span>⚡ First week: ${c.first ?? '—'}</span>
+        <span>🕐 Last week: ${c.last ?? '—'}</span>
       </div>
     </div>`
     })
@@ -294,7 +290,7 @@ async function main() {
   if (members.size === 0) throw new Error('no org members visible — is the token missing read:org?')
 
   const names = (await paginate(token, `/orgs/${ORG}/repos?type=all`))
-    .filter(r => !r.archived && r.name !== SELF)
+    .filter(r => !r.archived)
     .map(r => r.name)
   const repos = []
   for (const name of names) {
@@ -306,6 +302,11 @@ async function main() {
   }
 
   const model = buildModel(repos, new Date(), members)
+  // DEBUG=1 dumps the whole object that feeds the page; weeks are Maps, which
+  // JSON.stringify would otherwise render as {}
+  if (process.env.DEBUG) {
+    console.log(JSON.stringify(model, (_, v) => (v instanceof Map ? Object.fromEntries(v) : v), 2))
+  }
   const template = await readFile(new URL('./template.html', import.meta.url), 'utf8')
   await writeFile(new URL('./index.html', import.meta.url), render(template, model))
 
