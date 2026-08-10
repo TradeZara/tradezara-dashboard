@@ -216,3 +216,23 @@ test('a login is escaped before it reaches the HTML', () => {
 test('an unknown placeholder throws instead of leaking to the page', () => {
   assert.throws(() => render('{{TOTAL_STARS}}', build([], SYNCED)), /TOTAL_STARS/)
 })
+
+test('open PRs are listed newest first, and only from org members', () => {
+  const open = (login, number, createdAt) => ({
+    user: { login }, merged_at: null, state: 'open',
+    number, title: 'fix', html_url: `https://x/${number}`, created_at: createdAt,
+  })
+  const model = buildModel(
+    [{ name: 'a', contributors: [], pulls: [
+      open('ArtBreguez', 1, '2026-07-01T00:00:00Z'),
+      open('dependabot[bot]', 2, '2026-08-01T00:00:00Z'),
+      open('ArtBreguez', 3, '2026-08-02T00:00:00Z'),
+      { ...merged('ArtBreguez'), state: 'closed', number: 4 },
+    ] }],
+    SYNCED,
+    new Set(['ArtBreguez']),
+  )
+  assert.deepEqual(model.openPulls.map(p => p.number), [3, 1])
+  assert.equal(model.openPulls[0].repo, 'a')
+  assert.equal(model.contributors[0].prs, 1, 'merged count is untouched by open PRs')
+})
