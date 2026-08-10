@@ -5,9 +5,10 @@ import { readFile, writeFile } from 'node:fs/promises'
 const ORG = 'TradeZara'
 const API = 'https://api.github.com'
 // A repo that just received a push recomputes its stats; short waits turn that
-// into a red build on every run right after a merge.
-const STATS_RETRIES = 12
-const STATS_WAIT_MS = 10000
+// into a red build on every run right after a merge. 2 min was not enough for
+// this very repo, which every run pushes to — 5 min is the ceiling now.
+const STATS_RETRIES = 20
+const STATS_WAIT_MS = 15000
 const WEEKS = 12
 const PULLS_LISTED = 250
 const TOP = 5
