@@ -217,22 +217,24 @@ test('an unknown placeholder throws instead of leaking to the page', () => {
   assert.throws(() => render('{{TOTAL_STARS}}', build([], SYNCED)), /TOTAL_STARS/)
 })
 
-test('open PRs are listed newest first, and only from org members', () => {
-  const open = (login, number, createdAt) => ({
+test('the PR feed lists open and merged PRs newest first, abandoned ones never', () => {
+  const pr = (login, number, createdAt, extra) => ({
     user: { login }, merged_at: null, state: 'open',
-    number, title: 'fix', html_url: `https://x/${number}`, created_at: createdAt,
+    number, title: 'fix', html_url: `https://x/${number}`, created_at: createdAt, ...extra,
   })
   const model = buildModel(
     [{ name: 'a', contributors: [], pulls: [
-      open('ArtBreguez', 1, '2026-07-01T00:00:00Z'),
-      open('dependabot[bot]', 2, '2026-08-01T00:00:00Z'),
-      open('ArtBreguez', 3, '2026-08-02T00:00:00Z'),
-      { ...merged('ArtBreguez'), state: 'closed', number: 4 },
+      pr('ArtBreguez', 1, '2026-07-01T00:00:00Z'),
+      pr('dependabot[bot]', 2, '2026-08-01T00:00:00Z'),
+      pr('ArtBreguez', 3, '2026-08-02T00:00:00Z', { draft: true }),
+      pr('ArtBreguez', 4, '2026-07-15T00:00:00Z', { state: 'closed', merged_at: '2026-07-20T00:00:00Z' }),
+      pr('ArtBreguez', 5, '2026-08-03T00:00:00Z', { state: 'closed' }),
     ] }],
     SYNCED,
     new Set(['ArtBreguez']),
   )
-  assert.deepEqual(model.openPulls.map(p => p.number), [3, 1])
-  assert.equal(model.openPulls[0].repo, 'a')
-  assert.equal(model.contributors[0].prs, 1, 'merged count is untouched by open PRs')
+  assert.deepEqual(model.recentPulls.map(p => p.number), [3, 4, 1], 'abandoned #5 and bot #2 are out')
+  assert.deepEqual(model.recentPulls.map(p => p.state), ['draft', 'merged', 'open'])
+  assert.equal(model.recentPulls[0].repo, 'a')
+  assert.equal(model.contributors[0].prs, 1, 'merged count is untouched by the feed')
 })

@@ -9,6 +9,7 @@ const API = 'https://api.github.com'
 const STATS_RETRIES = 12
 const STATS_WAIT_MS = 10000
 const WEEKS = 12
+const PULLS_LISTED = 250
 const TOP = 5
 const COLORS = ['#00ff41', '#ff0055', '#00d4ff', '#ffbb00', '#bf00ff']
 const RANK_ICONS = ['👑', '⚡', '🔥', '💎', '🚀']
@@ -69,11 +70,12 @@ export function buildModel(repos, syncedAt, members) {
     })
     .sort((a, b) => b.commits - a.commits || a.login.localeCompare(b.login))
 
-  // Open PRs are listed, not counted: no aggregation, newest first.
-  const openPulls = repos
+  // The PR feed: listed, not counted. Open or merged only — closed without a
+  // merge is abandoned work and stays off the page. Newest first, capped.
+  const recentPulls = repos
     .flatMap(r =>
       r.pulls
-        .filter(p => p.state === 'open')
+        .filter(p => p.state === 'open' || p.merged_at)
         .map(p => ({
           repo: r.name,
           number: p.number,
@@ -82,10 +84,11 @@ export function buildModel(repos, syncedAt, members) {
           author: p.user.login,
           avatar: p.user.avatar_url ?? null,
           createdAt: p.created_at,
-          draft: !!p.draft,
+          state: p.merged_at ? 'merged' : p.draft ? 'draft' : 'open',
         })),
     )
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, PULLS_LISTED)
 
   const repoTotals = repos
     .map(r => ({
@@ -98,7 +101,7 @@ export function buildModel(repos, syncedAt, members) {
   return {
     syncedAt,
     contributors,
-    openPulls,
+    recentPulls,
     repos: repoTotals,
     weeks: recentWeeks(contributors),
     totals: {
@@ -247,7 +250,7 @@ export function render(template, model) {
       })),
     ),
     // PR titles are user text landing inside a <script>: neutralise "</script>"
-    OPEN_PRS: JSON.stringify(model.openPulls ?? []).replace(/</g, '\\u003c'),
+    RECENT_PRS: JSON.stringify(model.recentPulls ?? []).replace(/</g, '\\u003c'),
     REPO_DATA: JSON.stringify(
       Object.fromEntries(model.repos.map(r => [r.name, { commits: r.commits, contributors: r.contributors }])),
     ),

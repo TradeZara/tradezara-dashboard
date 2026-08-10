@@ -345,10 +345,14 @@
   .pr-num { color: var(--text2); font-size: 0.7rem; }
   .pr-author { color: var(--text2); font-size: 0.7rem; }
   .pr-date { color: var(--text2); font-size: 0.7rem; font-family: monospace; }
-  .pr-draft {
-    font-size: 0.6rem; padding: 1px 5px; border-radius: 3px;
-    border: 1px solid var(--border); color: var(--text2); background: var(--bg3);
+  .pr-state {
+    font-size: 0.6rem; padding: 1px 6px; border-radius: 3px;
+    border: 1px solid var(--border); background: var(--bg3);
+    text-transform: uppercase; letter-spacing: 0.08em;
   }
+  .pr-state.open { color: var(--green); border-color: rgba(0,255,65,0.3); }
+  .pr-state.merged { color: var(--purple); border-color: rgba(191,0,255,0.3); }
+  .pr-state.draft { color: var(--text2); }
   .pr-pager {
     display: flex; align-items: center; gap: 12px;
     padding: 10px 16px; background: var(--bg3);
@@ -489,7 +493,7 @@
 
   <!-- OPEN PRS -->
   <div>
-    <div class="section-label">Open Pull Requests</div>
+    <div class="section-label">Pull Requests</div>
     <div class="pr-wrap">
       <div id="pr-list"></div>
       <div class="pr-pager">
@@ -606,8 +610,8 @@ Object.entries(repoData).forEach(([repo, stats], i) => {
     </div>`;
 });
 
-// Open PRs, 20 per page
-const openPrs = {{OPEN_PRS}};
+// PR feed, 20 per page
+const openPrs = {{RECENT_PRS}};
 const PR_PAGE = 20;
 let prPage = 0;
 const prList = document.getElementById('pr-list');
@@ -625,11 +629,11 @@ function renderPrs() {
       <span class="pr-repo">${esc(pr.repo)}</span>
       <span class="pr-num">#${pr.number}</span>
       <a class="pr-title" href="${esc(pr.url)}" target="_blank" rel="noopener">${esc(pr.title)}</a>
-      ${pr.draft ? '<span class="pr-draft">draft</span>' : ''}
+      <span class="pr-state ${pr.state}">${esc(pr.state)}</span>
       <span class="pr-author">@${esc(pr.author)}</span>
       <span class="pr-date">${esc(String(pr.createdAt).slice(0, 10))}</span>
-    </div>`).join('') : '<div class="pr-row"><span class="pr-author">no open pull requests</span></div>';
-  prStatus.textContent = `${openPrs.length} OPEN · PAGE ${prPage + 1}/${pages}`;
+    </div>`).join('') : '<div class="pr-row"><span class="pr-author">no pull requests</span></div>';
+  prStatus.textContent = `${openPrs.length} PRs · PAGE ${prPage + 1}/${pages}`;
   prPrev.disabled = prPage === 0;
   prNext.disabled = prPage >= pages - 1;
 }
