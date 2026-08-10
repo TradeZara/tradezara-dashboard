@@ -5,10 +5,11 @@ import { readFile, writeFile } from 'node:fs/promises'
 const ORG = 'TradeZara'
 const API = 'https://api.github.com'
 // A repo that just received a push recomputes its stats; short waits turn that
-// into a red build on every run right after a merge. 2 min was not enough for
-// this very repo, which every run pushes to — 5 min is the ceiling now.
-const STATS_RETRIES = 20
-const STATS_WAIT_MS = 15000
+// into a red build on every run right after a merge. Waiting longer is not a
+// cure: a repo pushed on every run can answer 202 forever, so the wait is short
+// and a stuck repo falls back to /contributors instead of failing the build.
+const STATS_RETRIES = 6
+const STATS_WAIT_MS = 10000
 const WEEKS = 12
 const PULLS_LISTED = 250
 const TOP = 5
@@ -298,7 +299,17 @@ async function fetchContributors(token, repo) {
     const contributors = Array.isArray(json) ? json : []
     if (!isStillComputing(status, contributors)) return contributors
     if (attempt > STATS_RETRIES) {
-      if (status === 202) throw new Error(`${repo}: stats still computing after ${STATS_RETRIES} retries`)
+      // ponytail: totals only, no weekly series — that repo loses its sparkline
+      // contribution but the page still ships. Drop this once GitHub stops
+      // answering 202 forever for repos pushed on every run.
+      if (status === 202) {
+        console.warn(`${repo}: stats stuck on 202, falling back to /contributors (no weekly series)`)
+        return (await paginate(token, `/repos/${ORG}/${repo}/contributors?`)).map(c => ({
+          author: c,
+          total: c.contributions,
+          weeks: [],
+        }))
+      }
       return [] // stable 200 + []: the repo genuinely has no contributors
     }
     await new Promise(r => setTimeout(r, STATS_WAIT_MS))
