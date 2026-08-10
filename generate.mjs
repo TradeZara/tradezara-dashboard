@@ -69,6 +69,24 @@ export function buildModel(repos, syncedAt, members) {
     })
     .sort((a, b) => b.commits - a.commits || a.login.localeCompare(b.login))
 
+  // Open PRs are listed, not counted: no aggregation, newest first.
+  const openPulls = repos
+    .flatMap(r =>
+      r.pulls
+        .filter(p => p.state === 'open')
+        .map(p => ({
+          repo: r.name,
+          number: p.number,
+          title: p.title,
+          url: p.html_url,
+          author: p.user.login,
+          avatar: p.user.avatar_url ?? null,
+          createdAt: p.created_at,
+          draft: !!p.draft,
+        })),
+    )
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+
   const repoTotals = repos
     .map(r => ({
       name: r.name,
@@ -80,6 +98,7 @@ export function buildModel(repos, syncedAt, members) {
   return {
     syncedAt,
     contributors,
+    openPulls,
     repos: repoTotals,
     weeks: recentWeeks(contributors),
     totals: {
@@ -227,6 +246,8 @@ export function render(template, model) {
         pointBackgroundColor: COLORS[i % COLORS.length],
       })),
     ),
+    // PR titles are user text landing inside a <script>: neutralise "</script>"
+    OPEN_PRS: JSON.stringify(model.openPulls ?? []).replace(/</g, '\\u003c'),
     REPO_DATA: JSON.stringify(
       Object.fromEntries(model.repos.map(r => [r.name, { commits: r.commits, contributors: r.contributors }])),
     ),
@@ -297,7 +318,9 @@ async function main() {
     repos.push({
       name,
       contributors: await fetchContributors(token, name),
-      pulls: await paginate(token, `/repos/${ORG}/${name}/pulls?state=closed`),
+      // state=all in one pass: merged counts come from the closed ones, the
+      // open-PR list from the rest
+      pulls: await paginate(token, `/repos/${ORG}/${name}/pulls?state=all`),
     })
   }
 
