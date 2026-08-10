@@ -324,6 +324,43 @@
   .repo-card-stat { font-size: 0.7rem; color: var(--text2); margin-bottom: 4px; }
   .repo-card-stat span { color: var(--text); }
 
+  /* OPEN PRS */
+  .pr-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .pr-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    font-size: 0.78rem;
+  }
+  .pr-row:hover { background: var(--bg3); }
+  .pr-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); }
+  .pr-title { color: var(--text); text-decoration: none; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pr-title:hover { color: var(--green); }
+  .pr-repo { color: var(--blue); font-size: 0.7rem; }
+  .pr-num { color: var(--text2); font-size: 0.7rem; }
+  .pr-author { color: var(--text2); font-size: 0.7rem; }
+  .pr-date { color: var(--text2); font-size: 0.7rem; font-family: monospace; }
+  .pr-draft {
+    font-size: 0.6rem; padding: 1px 5px; border-radius: 3px;
+    border: 1px solid var(--border); color: var(--text2); background: var(--bg3);
+  }
+  .pr-pager {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; background: var(--bg3);
+    font-size: 0.7rem; color: var(--text2);
+  }
+  .pr-pager button {
+    background: var(--bg2); color: var(--green);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 4px 10px; font: inherit; cursor: pointer;
+  }
+  .pr-pager button:disabled { color: var(--text2); cursor: default; opacity: 0.5; }
+
   /* FOOTER */
   footer {
     border-top: 1px solid var(--border);
@@ -363,13 +400,13 @@
 <div class="hero">
   <div class="hero-title">// DEVELOPER COMMAND CENTER<span class="cursor">_</span></div>
   <div class="hero-sub">CONTRIBUTOR INTELLIGENCE &amp; CODEBASE ANALYTICS</div>
-  <div class="hero-ts">LAST SYNC: <span>2026-08-10 06:25:44 UTC</span></div>
+  <div class="hero-ts">LAST SYNC: <span>2026-08-10 11:07:05 UTC</span></div>
 </div>
 
 <div class="metrics">
   <div class="metric">
     <div class="metric-label">Total Commits</div>
-    <div class="metric-value">1813</div>
+    <div class="metric-value">1814</div>
     <div class="metric-sub">across all repositories</div>
   </div>
   <div class="metric">
@@ -456,7 +493,7 @@
         <td class="lb-commits">
           <div class="lb-bar-wrap">
             <div class="lb-bar" style="width:77%;background:#ff0055"></div>
-            <span>660</span>
+            <span>661</span>
           </div>
         </td>
         <td class="lb-prs">180</td>
@@ -563,13 +600,13 @@
         <div class="card-info">
           <div class="card-name" style="color:#ff0055">Antonio-Ramon</div>
           <div class="card-stats">
-            <span class="stat-pill">660 commits</span>
+            <span class="stat-pill">661 commits</span>
             <span class="stat-pill">180 PRs merged</span>
           </div>
         </div>
       </div>
       <div class="card-repos"><span class="repo-badge">backtesting-framework</span><span class="repo-badge">pip-matrix</span><span class="repo-badge">tradezara-dashboard</span></div>
-      <div class="card-sparkline"><div class="spark-bar" style="height:12px;background:#ff0055"></div><div class="spark-bar" style="height:30px;background:#ff0055"></div><div class="spark-bar" style="height:22px;background:#ff0055"></div><div class="spark-bar" style="height:9px;background:#ff0055"></div><div class="spark-bar" style="height:9px;background:#ff0055"></div><div class="spark-bar" style="height:11px;background:#ff0055"></div><div class="spark-bar" style="height:17px;background:#ff0055"></div><div class="spark-bar" style="height:16px;background:#ff0055"></div><div class="spark-bar" style="height:22px;background:#ff0055"></div><div class="spark-bar" style="height:21px;background:#ff0055"></div><div class="spark-bar" style="height:27px;background:#ff0055"></div><div class="spark-bar" style="height:4px;background:#ff0055"></div></div>
+      <div class="card-sparkline"><div class="spark-bar" style="height:12px;background:#ff0055"></div><div class="spark-bar" style="height:30px;background:#ff0055"></div><div class="spark-bar" style="height:22px;background:#ff0055"></div><div class="spark-bar" style="height:9px;background:#ff0055"></div><div class="spark-bar" style="height:9px;background:#ff0055"></div><div class="spark-bar" style="height:11px;background:#ff0055"></div><div class="spark-bar" style="height:17px;background:#ff0055"></div><div class="spark-bar" style="height:16px;background:#ff0055"></div><div class="spark-bar" style="height:22px;background:#ff0055"></div><div class="spark-bar" style="height:21px;background:#ff0055"></div><div class="spark-bar" style="height:27px;background:#ff0055"></div><div class="spark-bar" style="height:5px;background:#ff0055"></div></div>
       <div class="card-meta">
         <span>⚡ First week: 2025-09-07</span>
         <span>🕐 Last week: 2026-08-09</span>
@@ -660,6 +697,19 @@
     <div class="repo-grid" id="repo-grid"></div>
   </div>
 
+  <!-- OPEN PRS -->
+  <div>
+    <div class="section-label">Open Pull Requests</div>
+    <div class="pr-wrap">
+      <div id="pr-list"></div>
+      <div class="pr-pager">
+        <button id="pr-prev">◂ PREV</button>
+        <span id="pr-status"></span>
+        <button id="pr-next">NEXT ▸</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -673,7 +723,7 @@ const REPO_LABELS = ["pip-matrix","backtesting-framework","trading-view-ws","dat
 
 // How long ago the last sync was. A dead pipeline has to read as
 // "SYNCED 3D AGO", not as a promise of freshness.
-const minutes = (Date.now() - Date.parse("2026-08-10T06:25:44.470Z")) / 60000;
+const minutes = (Date.now() - Date.parse("2026-08-10T11:07:05.517Z")) / 60000;
 document.getElementById('sync-ago').textContent =
   minutes < 2 ? 'JUST NOW'
   : minutes < 60 ? `${Math.floor(minutes)}M AGO`
@@ -690,7 +740,7 @@ new Chart(document.getElementById('activityChart'), {
   type: 'line',
   data: {
     labels: ["2026-05-24","2026-05-31","2026-06-07","2026-06-14","2026-06-21","2026-06-28","2026-07-05","2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09"],
-    datasets: [{"label":"ArtBreguez","data":[18,0,19,32,15,1,7,33,13,11,10,0],"borderColor":"#00ff41","backgroundColor":"#00ff4122","tension":0.4,"fill":false,"pointRadius":3},{"label":"Antonio-Ramon","data":[21,54,39,16,17,20,30,29,40,38,48,8],"borderColor":"#ff0055","backgroundColor":"#ff005522","tension":0.4,"fill":false,"pointRadius":3},{"label":"robsongade","data":[9,1,18,2,2,5,0,0,1,0,0,0],"borderColor":"#00d4ff","backgroundColor":"#00d4ff22","tension":0.4,"fill":false,"pointRadius":3},{"label":"allanfigueira","data":[13,0,3,3,2,1,0,1,1,0,1,0],"borderColor":"#ffbb00","backgroundColor":"#ffbb0022","tension":0.4,"fill":false,"pointRadius":3},{"label":"AdoNunes","data":[0,0,1,1,3,2,3,0,0,0,0,0],"borderColor":"#bf00ff","backgroundColor":"#bf00ff22","tension":0.4,"fill":false,"pointRadius":3}]
+    datasets: [{"label":"ArtBreguez","data":[18,0,19,32,15,1,7,33,13,11,10,0],"borderColor":"#00ff41","backgroundColor":"#00ff4122","tension":0.4,"fill":false,"pointRadius":3},{"label":"Antonio-Ramon","data":[21,54,39,16,17,20,30,29,40,38,48,9],"borderColor":"#ff0055","backgroundColor":"#ff005522","tension":0.4,"fill":false,"pointRadius":3},{"label":"robsongade","data":[9,1,18,2,2,5,0,0,1,0,0,0],"borderColor":"#00d4ff","backgroundColor":"#00d4ff22","tension":0.4,"fill":false,"pointRadius":3},{"label":"allanfigueira","data":[13,0,3,3,2,1,0,1,1,0,1,0],"borderColor":"#ffbb00","backgroundColor":"#ffbb0022","tension":0.4,"fill":false,"pointRadius":3},{"label":"AdoNunes","data":[0,0,1,1,3,2,3,0,0,0,0,0],"borderColor":"#bf00ff","backgroundColor":"#bf00ff22","tension":0.4,"fill":false,"pointRadius":3}]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
@@ -711,7 +761,7 @@ new Chart(document.getElementById('repoChart'), {
     labels: REPO_LABELS,
     datasets: [{
       label: 'Commits',
-      data: [936,757,39,31,15,12,12,10,1,0],
+      data: [936,757,39,31,16,12,12,10,1,0],
       backgroundColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length] + '88'),
       borderColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length]),
       borderWidth: 1,
@@ -753,7 +803,7 @@ new Chart(document.getElementById('radarChart'), {
 });
 
 // Repo cards
-const repoData = {"pip-matrix":{"commits":936,"contributors":5},"backtesting-framework":{"commits":757,"contributors":3},"trading-view-ws":{"commits":39,"contributors":1},"databento-server":{"commits":31,"contributors":1},"tradezara-dashboard":{"commits":15,"contributors":2},"graph_api_hft":{"commits":12,"contributors":1},"polygon":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"correlation-modelling":{"commits":0,"contributors":0}};
+const repoData = {"pip-matrix":{"commits":936,"contributors":5},"backtesting-framework":{"commits":757,"contributors":3},"trading-view-ws":{"commits":39,"contributors":1},"databento-server":{"commits":31,"contributors":1},"tradezara-dashboard":{"commits":16,"contributors":2},"graph_api_hft":{"commits":12,"contributors":1},"polygon":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"correlation-modelling":{"commits":0,"contributors":0}};
 const grid = document.getElementById('repo-grid');
 const repoColors = ['#00d4ff','#00ff41','#ff0055','#ffbb00','#bf00ff','#00d4ff','#00ff41'];
 Object.entries(repoData).forEach(([repo, stats], i) => {
@@ -765,6 +815,37 @@ Object.entries(repoData).forEach(([repo, stats], i) => {
       <div class="repo-card-stat">Contributors: <span>${stats.contributors}</span></div>
     </div>`;
 });
+
+// Open PRs, 20 per page
+const openPrs = [{"repo":"backtesting-framework","number":291,"title":"feat(webhooks): gate webhook links behind a paid per-link add-on subscription","url":"https://github.com/TradeZara/backtesting-framework/pull/291","author":"ArtBreguez","avatar":"https://avatars.githubusercontent.com/u/98524696?v=4","createdAt":"2026-08-05T23:41:51Z","draft":false}];
+const PR_PAGE = 20;
+let prPage = 0;
+const prList = document.getElementById('pr-list');
+const prStatus = document.getElementById('pr-status');
+const prPrev = document.getElementById('pr-prev');
+const prNext = document.getElementById('pr-next');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function renderPrs() {
+  const pages = Math.max(1, Math.ceil(openPrs.length / PR_PAGE));
+  const slice = openPrs.slice(prPage * PR_PAGE, (prPage + 1) * PR_PAGE);
+  prList.innerHTML = slice.length ? slice.map(pr => `
+    <div class="pr-row">
+      <img class="pr-avatar" src="${esc(pr.avatar || '')}" alt="">
+      <span class="pr-repo">${esc(pr.repo)}</span>
+      <span class="pr-num">#${pr.number}</span>
+      <a class="pr-title" href="${esc(pr.url)}" target="_blank" rel="noopener">${esc(pr.title)}</a>
+      ${pr.draft ? '<span class="pr-draft">draft</span>' : ''}
+      <span class="pr-author">@${esc(pr.author)}</span>
+      <span class="pr-date">${esc(String(pr.createdAt).slice(0, 10))}</span>
+    </div>`).join('') : '<div class="pr-row"><span class="pr-author">no open pull requests</span></div>';
+  prStatus.textContent = `${openPrs.length} OPEN · PAGE ${prPage + 1}/${pages}`;
+  prPrev.disabled = prPage === 0;
+  prNext.disabled = prPage >= pages - 1;
+}
+prPrev.onclick = () => { prPage--; renderPrs(); };
+prNext.onclick = () => { prPage++; renderPrs(); };
+renderPrs();
 </script>
 </body>
 </html>
