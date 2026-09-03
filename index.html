@@ -404,7 +404,7 @@
 <div class="hero">
   <div class="hero-title">// DEVELOPER COMMAND CENTER<span class="cursor">_</span></div>
   <div class="hero-sub">CONTRIBUTOR INTELLIGENCE &amp; CODEBASE ANALYTICS</div>
-  <div class="hero-ts">LAST SYNC: <span>2026-09-02 20:16:36 UTC</span></div>
+  <div class="hero-ts">LAST SYNC: <span>2026-09-03 02:01:38 UTC</span></div>
 </div>
 
 <div class="metrics">
@@ -425,7 +425,7 @@
   </div>
   <div class="metric">
     <div class="metric-label">Repositories</div>
-    <div class="metric-value">10</div>
+    <div class="metric-value">11</div>
     <div class="metric-sub">active codebases</div>
   </div>
 </div>
@@ -718,16 +718,16 @@
 
 <footer>
   <div>TRADEZARA // DEVELOPER DASHBOARD <span>v2.0</span></div>
-  <div>generated <span>2026-09-02</span> · powered by GitHub API</div>
+  <div>generated <span>2026-09-03</span> · powered by GitHub API</div>
 </footer>
 
 <script>
 const COLORS = ['#00ff41','#ff0055','#00d4ff','#ffbb00','#bf00ff'];
-const REPO_LABELS = ["pip-matrix","backtesting-framework","trading-view-ws","databento-server","tradezara-dashboard","graph_api_hft","polygon",".github","example-api-oauth","correlation-modelling"];
+const REPO_LABELS = ["pip-matrix","backtesting-framework","trading-view-ws","databento-server","tradezara-dashboard","graph_api_hft","polygon",".github","example-api-oauth","correlation-modelling","tradezara-knowledge-base"];
 
 // How long ago the last sync was. A dead pipeline has to read as
 // "SYNCED 3D AGO", not as a promise of freshness.
-const minutes = (Date.now() - Date.parse("2026-09-02T20:16:36.088Z")) / 60000;
+const minutes = (Date.now() - Date.parse("2026-09-03T02:01:38.559Z")) / 60000;
 document.getElementById('sync-ago').textContent =
   minutes < 2 ? 'JUST NOW'
   : minutes < 60 ? `${Math.floor(minutes)}M AGO`
@@ -765,7 +765,7 @@ new Chart(document.getElementById('repoChart'), {
     labels: REPO_LABELS,
     datasets: [{
       label: 'Commits',
-      data: [1164,796,39,25,19,12,12,10,1,0],
+      data: [1164,796,39,25,19,12,12,10,1,0,0],
       backgroundColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length] + '88'),
       borderColor: REPO_LABELS.map((_, i) => COLORS[i % COLORS.length]),
       borderWidth: 1,
@@ -807,7 +807,7 @@ new Chart(document.getElementById('radarChart'), {
 });
 
 // Repo cards
-const repoData = {"pip-matrix":{"commits":1164,"contributors":5},"backtesting-framework":{"commits":796,"contributors":4},"trading-view-ws":{"commits":39,"contributors":1},"databento-server":{"commits":25,"contributors":1},"tradezara-dashboard":{"commits":19,"contributors":1},"graph_api_hft":{"commits":12,"contributors":1},"polygon":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"correlation-modelling":{"commits":0,"contributors":0}};
+const repoData = {"pip-matrix":{"commits":1164,"contributors":5},"backtesting-framework":{"commits":796,"contributors":4},"trading-view-ws":{"commits":39,"contributors":1},"databento-server":{"commits":25,"contributors":1},"tradezara-dashboard":{"commits":19,"contributors":1},"graph_api_hft":{"commits":12,"contributors":1},"polygon":{"commits":12,"contributors":1},".github":{"commits":10,"contributors":1},"example-api-oauth":{"commits":1,"contributors":1},"correlation-modelling":{"commits":0,"contributors":0},"tradezara-knowledge-base":{"commits":0,"contributors":0}};
 const grid = document.getElementById('repo-grid');
 const repoColors = ['#00d4ff','#00ff41','#ff0055','#ffbb00','#bf00ff','#00d4ff','#00ff41'];
 Object.entries(repoData).forEach(([repo, stats], i) => {
